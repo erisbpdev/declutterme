@@ -10,6 +10,7 @@ release/
 # Operating System files
 Thumbs.db
 .DS_Store
+.env
 
 # IDE files
 .vscode/
