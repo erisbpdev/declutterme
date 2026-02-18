@@ -1,0 +1,37 @@
+<!-- Helper to generate an icon - open in browser and right-click save -->
+<canvas id="c" width="512" height="512"></canvas>
+<script>
+const c = document.getElementById('c');
+const ctx = c.getContext('2d');
+
+// Background
+const grad = ctx.createLinearGradient(0, 0, 512, 512);
+grad.addColorStop(0, '#f59e0b');
+grad.addColorStop(1, '#d97706');
+ctx.fillStyle = grad;
+ctx.beginPath();
+ctx.roundRect(0, 0, 512, 512, 80);
+ctx.fill();
+
+// Folder icon
+ctx.fillStyle = 'rgba(0,0,0,0.2)';
+ctx.beginPath();
+ctx.roundRect(80, 160, 352, 260, 24);
+ctx.fill();
+
+ctx.fillStyle = '#000';
+ctx.beginPath();
+ctx.roundRect(76, 156, 352, 260, 24);
+ctx.fill();
+
+// Folder tab
+ctx.beginPath();
+ctx.roundRect(76, 130, 140, 50, [12, 12, 0, 0]);
+ctx.fill();
+
+// Sparkle
+ctx.fillStyle = '#fff';
+ctx.font = 'bold 120px serif';
+ctx.textAlign = 'center';
+ctx.fillText('✨', 256, 330);
+</script>

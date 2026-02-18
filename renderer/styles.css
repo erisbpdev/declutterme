@@ -1,0 +1,1226 @@
+/* ═══════════════════════════════════════════
+   DECLUTTERME — Frutiger Aero / Y2K Glass
+   ═══════════════════════════════════════════ */
+
+/* Reset */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* Aero blues & cyans */
+  --aero-sky: #4fc3f7;
+  --aero-blue: #0288d1;
+  --aero-deep: #01579b;
+  --aero-cyan: #00e5ff;
+  --aero-teal: #26c6da;
+  --aero-mint: #80deea;
+
+  /* Glass surfaces */
+  --glass-bg: rgba(255, 255, 255, 0.08);
+  --glass-bg-strong: rgba(255, 255, 255, 0.12);
+  --glass-border: rgba(255, 255, 255, 0.18);
+  --glass-border-strong: rgba(255, 255, 255, 0.3);
+  --glass-shine: rgba(255, 255, 255, 0.15);
+
+  /* Chrome / metallic */
+  --chrome-light: #e8eaf0;
+  --chrome-mid: #b0b8c8;
+  --chrome-dark: #78849c;
+
+  /* Text */
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.75);
+  --text-muted: rgba(255, 255, 255, 0.45);
+
+  /* Accents */
+  --accent-green: #69f0ae;
+  --accent-orange: #ffab40;
+  --accent-red: #ff5252;
+
+  /* Spacing */
+  --radius: 14px;
+  --radius-sm: 10px;
+  --radius-lg: 20px;
+}
+
+body {
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+  background: transparent;
+  color: var(--text-primary);
+  height: 100vh;
+  overflow: hidden;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ═══════════════════════════════════════════
+   WINDOW FRAME — Outer chrome border
+   ═══════════════════════════════════════════ */
+.window-frame {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  overflow: hidden;
+  /* Outer chrome bezel */
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.3),
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    0 2px 8px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  /* Deep blue gradient background — the "desktop" behind the glass */
+  background:
+    linear-gradient(180deg,
+      #0d1b2a 0%,
+      #1b2d45 30%,
+      #162038 60%,
+      #0d1520 100%
+    );
+}
+
+/* ═══════════════════════════════════════════
+   TITLE BAR — Aero glass with chrome buttons
+   ═══════════════════════════════════════════ */
+.title-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 38px;
+  padding: 0 8px 0 12px;
+  -webkit-app-region: drag;
+  /* Glass effect */
+  background:
+    linear-gradient(180deg,
+      rgba(120, 180, 255, 0.25) 0%,
+      rgba(60, 120, 200, 0.15) 50%,
+      rgba(40, 80, 160, 0.2) 100%
+    );
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  position: relative;
+}
+
+/* Top highlight line */
+.title-bar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 5%,
+    rgba(255, 255, 255, 0.4) 30%,
+    rgba(255, 255, 255, 0.5) 50%,
+    rgba(255, 255, 255, 0.4) 70%,
+    transparent 95%
+  );
+}
+
+/* Inner glow / shine on top half */
+.title-bar::after {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  right: 1px;
+  height: 50%;
+  background: linear-gradient(180deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    transparent 100%
+  );
+  border-radius: 10px 10px 0 0;
+  pointer-events: none;
+}
+
+.title-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.title-bar-orb {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, var(--aero-sky), var(--aero-blue));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.title-bar-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  letter-spacing: 0.3px;
+}
+
+.title-bar-controls {
+  display: flex;
+  gap: 2px;
+  -webkit-app-region: no-drag;
+}
+
+.title-btn {
+  width: 28px;
+  height: 24px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.title-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: white;
+}
+
+.title-btn.close:hover {
+  background: linear-gradient(180deg, #ff6b6b, #e53935);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  box-shadow: 0 0 8px rgba(255, 50, 50, 0.4);
+}
+
+/* ═══════════════════════════════════════════
+   APP CONTAINER — Scrollable content
+   ═══════════════════════════════════════════ */
+.app-container {
+  flex: 1 1 0;
+  padding: 20px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* ═══════════════════════════════════════════
+   VIEW SWITCHING
+   ═══════════════════════════════════════════ */
+.view {
+  display: none;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.view.active {
+  display: flex;
+}
+
+.view::-webkit-scrollbar {
+  width: 8px;
+}
+
+.view::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 4px;
+}
+
+.view::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.view::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.app-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.app-container::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 4px;
+}
+
+.app-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.app-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ═══════════════════════════════════════════
+   HEADER — Logo with aero orb
+   ═══════════════════════════════════════════ */
+.header {
+  text-align: center;
+  padding: 16px 0 8px;
+  position: relative;
+}
+
+.header-shine {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 100px;
+  background: radial-gradient(ellipse, rgba(79, 195, 247, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+
+.logo-orb {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  position: relative;
+  /* Glossy sphere gradient — the classic Aero orb */
+  background:
+    radial-gradient(circle at 35% 30%,
+      rgba(255, 255, 255, 0.6) 0%,
+      rgba(255, 255, 255, 0.0) 50%
+    ),
+    linear-gradient(135deg,
+      var(--aero-cyan) 0%,
+      var(--aero-blue) 50%,
+      var(--aero-deep) 100%
+    );
+  box-shadow:
+    0 4px 16px rgba(2, 136, 209, 0.4),
+    0 2px 4px rgba(0, 0, 0, 0.3),
+    inset 0 -2px 6px rgba(0, 0, 0, 0.2),
+    inset 0 2px 4px rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.logo-orb::after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 12px;
+  right: 12px;
+  height: 40%;
+  background: linear-gradient(180deg,
+    rgba(255, 255, 255, 0.45) 0%,
+    rgba(255, 255, 255, 0.0) 100%
+  );
+  border-radius: 50%;
+}
+
+/* ASCII Robot Companion — lives in the orb */
+.companion-face {
+  position: relative;
+  z-index: 1;
+  font-family: 'Consolas', 'SF Mono', 'Courier New', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  color: white;
+  text-shadow:
+    0 0 8px rgba(255, 255, 255, 0.6),
+    0 1px 2px rgba(0, 0, 0, 0.4);
+  letter-spacing: -0.5px;
+  line-height: 1;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.companion-face.pop {
+  animation: companionPop 0.35s ease;
+}
+
+/* Mini face in the title bar */
+.companion-face-mini {
+  font-family: 'Consolas', 'SF Mono', 'Courier New', monospace;
+  font-size: 8px;
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 0 4px rgba(255, 255, 255, 0.4);
+  letter-spacing: -0.5px;
+  line-height: 1;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.logo-text h1 {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  /* Chrome text gradient */
+  background: linear-gradient(180deg,
+    #ffffff 0%,
+    #e0e8f0 40%,
+    #b0c4d8 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: none;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.subtitle {
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  margin-top: 2px;
+}
+
+/* ═══════════════════════════════════════════
+   GLASS PANELS — Frosted glass cards
+   ═══════════════════════════════════════════ */
+.glass-panel {
+  position: relative;
+  padding: 16px 18px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  /* Frosted glass */
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Top glossy shine — the classic Aero "wet" look */
+.glass-panel-shine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(180deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.02) 40%,
+    transparent 100%
+  );
+  pointer-events: none;
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+
+.glass-panel:hover {
+  border-color: rgba(255, 255, 255, 0.22);
+  background: var(--glass-bg-strong);
+}
+
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--aero-mint);
+  margin-bottom: 10px;
+  text-shadow: 0 0 8px rgba(128, 222, 234, 0.3);
+}
+
+.section-label svg {
+  opacity: 0.7;
+}
+
+/* ═══════════════════════════════════════════
+   FOLDER INPUT
+   ═══════════════════════════════════════════ */
+.folder-input {
+  display: flex;
+  gap: 8px;
+}
+
+.folder-input input {
+  flex: 1;
+  padding: 10px 14px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: 12px;
+  font-family: 'Consolas', 'SF Mono', monospace;
+  outline: none;
+  transition: all 0.25s;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.folder-input input:focus {
+  border-color: var(--aero-sky);
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.2),
+    0 0 8px rgba(79, 195, 247, 0.2);
+}
+
+/* ═══════════════════════════════════════════
+   CHROME BUTTONS — Metallic / glossy buttons
+   ═══════════════════════════════════════════ */
+.btn-chrome {
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s;
+  position: relative;
+  /* Chrome metallic gradient */
+  background:
+    linear-gradient(180deg,
+      rgba(255, 255, 255, 0.15) 0%,
+      rgba(255, 255, 255, 0.05) 45%,
+      rgba(0, 0, 0, 0.05) 55%,
+      rgba(0, 0, 0, 0.1) 100%
+    );
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.btn-chrome:hover:not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.3);
+  background:
+    linear-gradient(180deg,
+      rgba(255, 255, 255, 0.22) 0%,
+      rgba(255, 255, 255, 0.08) 45%,
+      rgba(0, 0, 0, 0.03) 55%,
+      rgba(0, 0, 0, 0.08) 100%
+    );
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 0 12px rgba(79, 195, 247, 0.1);
+}
+
+.btn-chrome:active:not(:disabled) {
+  background:
+    linear-gradient(180deg,
+      rgba(0, 0, 0, 0.05) 0%,
+      rgba(0, 0, 0, 0.1) 45%,
+      rgba(255, 255, 255, 0.03) 55%,
+      rgba(255, 255, 255, 0.08) 100%
+    );
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.btn-chrome:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 11px;
+  cursor: pointer;
+  padding: 4px 0;
+  text-align: left;
+  transition: all 0.2s;
+}
+
+.btn-link:hover {
+  color: var(--aero-sky);
+  text-shadow: 0 0 8px rgba(79, 195, 247, 0.3);
+}
+
+/* ═══════════════════════════════════════════
+   PRIMARY AERO BUTTON — Big glossy CTA
+   ═══════════════════════════════════════════ */
+.action-section {
+  display: flex;
+  justify-content: center;
+  padding: 4px 0;
+}
+
+.btn-aero-primary {
+  width: 100%;
+  padding: 16px 32px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: var(--radius);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  /* Vibrant blue-cyan gradient — the hero button */
+  background:
+    linear-gradient(180deg,
+      #4fc3f7 0%,
+      #0288d1 45%,
+      #0277bd 55%,
+      #01579b 100%
+    );
+  box-shadow:
+    0 4px 20px rgba(2, 136, 209, 0.4),
+    0 2px 4px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  transition: all 0.25s;
+}
+
+/* Top glossy reflection */
+.btn-aero-shine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(180deg,
+    rgba(255, 255, 255, 0.35) 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%
+  );
+  border-radius: var(--radius) var(--radius) 0 0;
+  pointer-events: none;
+}
+
+.btn-aero-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 17px;
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  letter-spacing: 0.3px;
+}
+
+.btn-aero-icon {
+  flex-shrink: 0;
+}
+
+.btn-aero-icon.spin {
+  animation: spinner 0.8s linear infinite;
+}
+
+.btn-aero-primary:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 6px 28px rgba(2, 136, 209, 0.5),
+    0 2px 8px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    0 0 20px rgba(79, 195, 247, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.btn-aero-primary:active {
+  transform: translateY(0);
+  background:
+    linear-gradient(180deg,
+      #039be5 0%,
+      #0277bd 45%,
+      #01579b 55%,
+      #004c8c 100%
+    );
+  box-shadow:
+    0 2px 8px rgba(2, 136, 209, 0.3),
+    inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.btn-aero-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-aero-primary.loading {
+  pointer-events: none;
+}
+
+/* ═══════════════════════════════════════════
+   CONTROLS PANEL — Auto mode + Undo
+   ═══════════════════════════════════════════ */
+.auto-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.auto-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.auto-info svg {
+  color: var(--aero-sky);
+  opacity: 0.7;
+}
+
+.auto-label {
+  font-size: 14px;
+  font-weight: 600;
+  display: block;
+}
+
+.auto-desc {
+  font-size: 11px;
+  color: var(--text-muted);
+  display: block;
+  margin-top: 1px;
+}
+
+/* Aero Toggle Switch — glossy pill */
+.aero-switch {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 26px;
+}
+
+.aero-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.aero-switch-track {
+  position: absolute;
+  inset: 0;
+  border-radius: 26px;
+  cursor: pointer;
+  transition: all 0.3s;
+  /* Off state — dark inset */
+  background:
+    linear-gradient(180deg,
+      rgba(0, 0, 0, 0.4) 0%,
+      rgba(0, 0, 0, 0.2) 100%
+    );
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.aero-switch-thumb {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  left: 2px;
+  top: 2px;
+  border-radius: 50%;
+  transition: all 0.3s;
+  /* Chrome metallic thumb */
+  background:
+    radial-gradient(circle at 40% 35%,
+      rgba(255, 255, 255, 0.8) 0%,
+      rgba(255, 255, 255, 0.2) 50%,
+      rgba(200, 210, 220, 0.8) 100%
+    );
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+input:checked + .aero-switch-track {
+  /* On state — glowing aero blue */
+  background:
+    linear-gradient(180deg,
+      #4fc3f7 0%,
+      #0288d1 100%
+    );
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 0 12px rgba(79, 195, 247, 0.3);
+}
+
+input:checked + .aero-switch-track .aero-switch-thumb {
+  transform: translateX(22px);
+}
+
+.controls-divider {
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  margin: 12px 0;
+}
+
+.btn-undo {
+  width: 100%;
+  justify-content: center;
+}
+
+/* ═══════════════════════════════════════════
+   LOG PANEL — Activity feed
+   ═══════════════════════════════════════════ */
+.log-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.log-container {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 80px;
+  max-height: 180px;
+  padding: 10px 12px;
+  font-size: 12px;
+  font-family: 'Consolas', 'SF Mono', 'Fira Code', monospace;
+  /* Inset well effect */
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius-sm);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.log-container::-webkit-scrollbar {
+  width: 5px;
+}
+
+.log-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.log-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.log-empty {
+  color: var(--text-muted);
+  text-align: center;
+  padding: 20px 0;
+  font-family: 'Segoe UI', -apple-system, sans-serif;
+  font-size: 13px;
+  font-style: italic;
+}
+
+.log-entry {
+  padding: 4px 0;
+  color: var(--text-secondary);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  line-height: 1.5;
+  animation: logFadeIn 0.3s ease;
+}
+
+.log-entry:last-child {
+  border-bottom: none;
+}
+
+.log-entry .file-name {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.log-entry .category {
+  color: var(--aero-cyan);
+  font-weight: 600;
+  text-shadow: 0 0 6px rgba(0, 229, 255, 0.3);
+}
+
+.log-entry .timestamp {
+  color: var(--text-muted);
+  font-size: 10px;
+  margin-right: 4px;
+}
+
+.log-entry .summary-count {
+  color: var(--aero-sky);
+  font-weight: 700;
+}
+
+.log-entry.error {
+  color: var(--accent-red);
+}
+
+.log-entry.success {
+  color: var(--accent-green);
+  text-shadow: 0 0 6px rgba(105, 240, 174, 0.2);
+}
+
+/* ═══════════════════════════════════════════
+   SETTINGS VIEW
+   ═══════════════════════════════════════════ */
+
+#settingsView {
+  gap: 0;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* Title bar settings gear button */
+.title-btn.settings:hover {
+  background: rgba(79, 195, 247, 0.15);
+  color: var(--aero-sky);
+}
+
+/* Settings header with back arrow */
+.settings-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 4px;
+  flex-shrink: 0;
+}
+
+.settings-title {
+  font-size: 18px;
+  font-weight: 700;
+  background: linear-gradient(180deg, #ffffff 0%, #e0e8f0 40%, #b0c4d8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+/* Settings scroll area */
+.settings-scroll {
+  flex: 1 1 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 4px 2px 8px;
+  min-height: 0;
+}
+
+.settings-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.settings-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 4px;
+}
+
+.settings-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.settings-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Settings section description */
+.settings-desc {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+  margin-top: -4px;
+}
+
+/* Settings section panel — override glass-panel overflow:hidden so content isn't clipped */
+.settings-section {
+  padding: 14px 16px;
+  overflow: visible;
+  flex-shrink: 0;
+}
+
+/* Settings list (rows container) */
+.settings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.settings-list:empty {
+  margin-bottom: 4px;
+}
+
+/* Chips mode for exclusions */
+.settings-list-chips {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+/* Individual settings row (rules, folder names) */
+.settings-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  animation: logFadeIn 0.2s ease;
+}
+
+.settings-row .arrow-icon {
+  color: var(--aero-sky);
+  opacity: 0.6;
+  flex-shrink: 0;
+}
+
+.settings-row .category-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  width: 90px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Small inputs for settings forms */
+.input-sm {
+  padding: 6px 10px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-size: 12px;
+  font-family: 'Consolas', 'SF Mono', monospace;
+  outline: none;
+  transition: all 0.25s;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.input-sm:focus {
+  border-color: var(--aero-sky);
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.2),
+    0 0 8px rgba(79, 195, 247, 0.2);
+}
+
+.input-sm::placeholder {
+  color: var(--text-muted);
+}
+
+/* Extension tag chips */
+.tag-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 6px 3px 10px;
+  background: rgba(79, 195, 247, 0.12);
+  border: 1px solid rgba(79, 195, 247, 0.22);
+  border-radius: 20px;
+  font-size: 11px;
+  color: var(--aero-sky);
+  font-family: 'Consolas', 'SF Mono', monospace;
+  animation: logFadeIn 0.2s ease;
+}
+
+.tag-remove {
+  width: 16px;
+  height: 16px;
+  border: none;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: all 0.2s;
+}
+
+.tag-remove:hover {
+  background: var(--accent-red);
+  color: white;
+}
+
+/* Exclusion input row */
+.exclusion-input-row {
+  display: flex;
+  gap: 8px;
+}
+
+/* Shortcut options (collapsible) */
+.shortcut-options {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.folder-name-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.folder-name-row label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+/* Settings bottom action bar */
+.settings-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+.settings-actions-right {
+  display: flex;
+  gap: 8px;
+}
+
+/* Smaller aero primary button for save */
+.btn-aero-sm {
+  padding: 8px 20px;
+  border-radius: var(--radius-sm);
+}
+
+.btn-aero-sm .btn-aero-content {
+  font-size: 13px;
+  gap: 6px;
+}
+
+/* Small chrome button */
+.btn-sm {
+  padding: 5px 12px;
+  font-size: 11px;
+}
+
+/* Icon-only button */
+.btn-icon {
+  padding: 6px;
+}
+
+/* Add button (full width, dashed) */
+.btn-add {
+  width: 100%;
+  justify-content: center;
+  font-size: 12px;
+  border-style: dashed;
+  opacity: 0.6;
+  transition: all 0.2s;
+}
+
+.btn-add:hover:not(:disabled) {
+  opacity: 1;
+  border-color: var(--aero-sky);
+  color: var(--aero-sky);
+}
+
+/* Remove button in settings rows */
+.btn-remove {
+  padding: 4px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.btn-remove:hover {
+  background: rgba(255, 82, 82, 0.15);
+  border-color: rgba(255, 82, 82, 0.3);
+  color: var(--accent-red);
+}
+
+/* Subtle danger button for reset */
+.btn-danger-subtle {
+  color: var(--accent-red);
+  opacity: 0.6;
+  font-size: 12px;
+}
+
+.btn-danger-subtle:hover:not(:disabled) {
+  opacity: 1;
+  border-color: rgba(255, 82, 82, 0.3);
+  background: rgba(255, 82, 82, 0.1);
+}
+
+/* ═══════════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════════ */
+@keyframes logFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spinner {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes companionPop {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.25); }
+  60% { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+
+.btn-aero-primary.loading {
+  animation: pulse 1.4s ease infinite;
+}
+
+/* Subtle ambient animation on the orb */
+@keyframes orbGlow {
+  0%, 100% {
+    box-shadow:
+      0 4px 16px rgba(2, 136, 209, 0.4),
+      0 2px 4px rgba(0, 0, 0, 0.3),
+      inset 0 -2px 6px rgba(0, 0, 0, 0.2),
+      inset 0 2px 4px rgba(255, 255, 255, 0.3);
+  }
+  50% {
+    box-shadow:
+      0 4px 24px rgba(2, 136, 209, 0.55),
+      0 2px 4px rgba(0, 0, 0, 0.3),
+      inset 0 -2px 6px rgba(0, 0, 0, 0.2),
+      inset 0 2px 4px rgba(255, 255, 255, 0.3),
+      0 0 20px rgba(79, 195, 247, 0.15);
+  }
+}
+
+.logo-orb {
+  animation: orbGlow 3s ease-in-out infinite;
+}

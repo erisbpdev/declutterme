@@ -1,0 +1,17 @@
+{
+  "name": "declutter-me",
+  "version": "1.0.0",
+  "description": "Your friendly desktop buddy that organizes files into tidy folders by type",
+  "author": "Eris <erisbp.dev@gmail.com>",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "chokidar": "^3.6.0"
+  },
+  "devDependencies": {
+    "electron": "latest"
+  }
+}
