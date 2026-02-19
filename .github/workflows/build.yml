@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
 
 jobs:
   release:
@@ -21,11 +22,11 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
       - name: Install Linux Build Dependencies
         if: matrix.os == 'ubuntu-latest'
@@ -34,8 +35,7 @@ jobs:
           sudo apt-get install -y libarchive-tools rpm fakeroot
 
       - name: Build & Publish
-        run: npx electron-builder --publish always
+        run: npm run publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Explicitly tell Electron Builder to skip signing via env vars as a backup
           CSC_IDENTITY_AUTO_DISCOVERY: false
