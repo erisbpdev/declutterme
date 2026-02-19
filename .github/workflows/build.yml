@@ -34,7 +34,7 @@ jobs:
           sudo apt-get install -y libarchive-tools rpm fakeroot
 
       - name: Build & Publish
-        run: npm run publish
+        run: npx electron-builder --publish always
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Explicitly tell Electron Builder to skip signing via env vars as a backup
