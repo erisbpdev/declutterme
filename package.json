@@ -1,17 +1,28 @@
 {
-  "name": "declutter-me",
+  "name": "declutterme",
   "version": "1.0.0",
   "description": "Your friendly desktop buddy that organizes files into tidy folders by type",
   "author": "Eris <erisbp.dev@gmail.com>",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
+    "build": "electron-builder",
+    "publish": "electron-builder --publish always",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "dependencies": {
-    "chokidar": "^3.6.0"
-  },
-  "devDependencies": {
-    "electron": "latest"
+  "build": {
+    "appId": "com.eris.declutterme",
+    "productName": "DeclutterMe",
+    "win": {
+      "target": ["nsis", "portable"],
+      "forceCodeSigning": false
+    },
+    "mac": {
+      "target": "dmg",
+      "identity": null
+    },
+    "linux": {
+      "target": "AppImage"
+    }
   }
 }
