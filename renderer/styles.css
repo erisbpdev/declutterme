@@ -1460,7 +1460,7 @@ input:checked + .aero-switch-track .aero-switch-thumb {
 .preview-group {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
 .preview-group-header {
@@ -1504,7 +1504,7 @@ input:checked + .aero-switch-track .aero-switch-thumb {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 4px 4px 4px 0;
+  padding: 2px 4px 2px 0;
   border-radius: var(--radius-sm);
   transition: background 0.12s, opacity 0.12s;
 }
@@ -1554,7 +1554,7 @@ input:checked + .aero-switch-track .aero-switch-thumb {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4px;
+  padding: 2px;
   background: transparent;
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
@@ -1622,4 +1622,9 @@ input:checked + .aero-switch-track .aero-switch-thumb {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* Let inputs shrink inside rule rows instead of pushing the remove button out */
+.settings-row .input-sm {
+  min-width: 0;
 }

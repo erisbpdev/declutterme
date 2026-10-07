@@ -151,6 +151,7 @@ function setCompanionFace(key, temporary = false) {
 }
 
 function showCompanionMessage(key) {
+  if (!mainView.classList.contains('active')) return;
   const msg = randomMessage(key);
   if (companionMessageText) companionMessageText.textContent = msg;
   if (companionMessage) {
@@ -221,6 +222,9 @@ function hideAllViews() {
   settingsView.classList.remove('active');
   statsView.classList.remove('active');
   previewView.classList.remove('active');
+  // The speech bubble sits over the top of the window — it belongs to the main view only
+  if (companionMsgTimer) clearTimeout(companionMsgTimer);
+  if (companionMessage) companionMessage.style.display = 'none';
 }
 
 function showSettings() {
