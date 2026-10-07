@@ -3,7 +3,7 @@
    Warm Paper Craft × Ink Companion
    ═══════════════════════════════════════════ */
 
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,600&family=Sono:wght@300;400;500;700&family=DM+Serif+Display:ital@0;1&display=swap');
+@import url('fonts/fonts.css');
 
 /* Reset */
 *, *::before, *::after {
@@ -213,7 +213,7 @@ body {
   display: none;
   flex: 1 1 0;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
   overflow-y: auto;
   overflow-x: hidden;
   min-height: 0;
@@ -270,7 +270,7 @@ body {
    ═══════════════════════════════════════════ */
 .header {
   text-align: center;
-  padding: 16px 0 8px;
+  padding: 6px 0 2px;
   position: relative;
 }
 
@@ -286,8 +286,8 @@ body {
 }
 
 .logo-orb {
-  width: 52px;
-  height: 52px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   position: relative;
   background: var(--paper-warm);
@@ -316,7 +316,7 @@ body {
   position: relative;
   z-index: 1;
   font-family: 'Sono', 'Courier New', monospace;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 700;
   color: var(--sakura-deep);
   letter-spacing: -0.5px;
@@ -368,7 +368,7 @@ body {
 
 .logo-text h1 {
   font-family: 'Fraunces', Georgia, serif;
-  font-size: 26px;
+  font-size: 22px;
   font-weight: 900;
   letter-spacing: -1px;
   color: var(--ink);
@@ -400,11 +400,11 @@ body {
    ═══════════════════════════════════════════ */
 .glass-panel {
   position: relative;
-  padding: 16px 18px;
+  padding: 14px 16px;
   border-radius: var(--radius);
   background: var(--paper-warm);
   border: 2px solid var(--ink);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-sm);
 }
 
 /* Hide the old aero shine overlay */
@@ -412,16 +412,13 @@ body {
   display: none;
 }
 
-.glass-panel:hover {
-  transform: translate(-1px, -1px);
-  box-shadow: 5px 7px 0px rgba(26,18,8,0.12);
-}
-
-/* Disable hover lift on interactive panels */
-.controls-panel:hover,
-.stats-card:hover {
-  transform: none;
-  box-shadow: var(--shadow-md);
+/* Secondary surfaces — soft paper sheets, so ink borders + stamps
+   are reserved for the primary panels and buttons */
+.log-panel,
+.settings-section,
+.preview-group {
+  border: 1.5px solid var(--washi);
+  box-shadow: none;
 }
 
 .section-label {
@@ -776,34 +773,43 @@ input:checked + .aero-switch-track .aero-switch-thumb {
 }
 
 /* Bottom row: Undo + Clean */
-.controls-bottom-row {
+/* Activity log header — title + undo/clean actions */
+.log-header {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 8px;
+  margin-bottom: 10px;
 }
 
-.btn-undo {
-  flex: 1;
-  justify-content: center;
+.log-header .section-label {
+  margin-bottom: 0;
 }
 
-.btn-clean {
-  flex-shrink: 0;
+.log-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.log-actions .btn-chrome svg {
+  width: 12px;
+  height: 12px;
 }
 
 /* ═══════════════════════════════════════════
    LOG PANEL — Activity notebook
    ═══════════════════════════════════════════ */
 .log-panel {
-  flex: 0 0 auto;
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  min-height: 0;
+  min-height: 170px;
 }
 
 .log-container {
   overflow-y: auto;
+  flex: 1 1 0;
   min-height: 80px;
-  max-height: 200px;
   padding: 10px 12px;
   font-size: 12px;
   font-family: 'Sono', 'Courier New', monospace;
