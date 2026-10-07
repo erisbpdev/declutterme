@@ -47,6 +47,7 @@ Desktop/
 | **Empty Folder Cleanup** | Removes empty category folders — never your own empty folders |
 | **Profiles & Stats** | Save folder + rule presets, and see how much Tidy has sorted for you |
 | **Dark Mode** | Follows Windows by default, or pick Light / Dark in Settings |
+| **Auto-Updates** | Installer builds update themselves from GitHub Releases |
 | **System Tray** | Minimize to tray, right-click for quick actions |
 | **Cross-Platform** | Windows (NSIS + portable), macOS (DMG), Linux (AppImage) |
 | **Tidy Companion** | ASCII robot buddy with reactive expressions |
@@ -218,6 +219,15 @@ git push origin v1.0.0
 
 The workflow runs the test suite, then builds on Windows, macOS, and Linux in parallel using Node.js 22 and electron-builder.
 
+### Releasing an update
+
+1. Bump `version` in `package.json` and commit
+2. Tag and push: `git tag v1.2.1 && git push origin v1.2.1`
+3. CI builds everything into a **draft** GitHub release — check it, then hit **Publish**
+4. Installed copies pick it up within a few hours (or via Settings → Updates → Check for updates), download it in the background, and install on the next restart
+
+Auto-updates work for the Windows installer and the Linux AppImage. The portable `.exe` can't replace itself, and macOS needs a signed build, so those two update manually.
+
 ---
 
 ## Project Structure
@@ -233,6 +243,7 @@ app/
     categories.js       100+ extensions mapped to 10 categories
     config.js           Settings persistence (JSON)
     stats.js            Usage stats (files organized, sessions, top categories)
+    updater.js          Auto-updates from GitHub Releases (electron-updater)
     watcher.js          Chokidar-based auto-mode file watcher
     shortcuts.js        Windows .lnk shortcut analyzer (PowerShell)
     tray.js             System tray icon & context menu

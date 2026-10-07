@@ -66,6 +66,15 @@ const profilesList = document.getElementById('profilesList');
 const pinnedFilesList = document.getElementById('pinnedFilesList');
 const themeControl = document.getElementById('themeControl');
 
+// DOM Elements — Updates
+const updateBanner = document.getElementById('updateBanner');
+const updateBannerVersion = document.getElementById('updateBannerVersion');
+const updateRestartBtn = document.getElementById('updateRestartBtn');
+const updateLaterBtn = document.getElementById('updateLaterBtn');
+const appVersion = document.getElementById('appVersion');
+const updateStatusText = document.getElementById('updateStatusText');
+const updateActionBtn = document.getElementById('updateActionBtn');
+
 // DOM Elements — Stats
 const statsBackBtn = document.getElementById('statsBackBtn');
 
@@ -123,7 +132,8 @@ const MESSAGES = {
   firstRun: ['Hi! I\'m Tidy — your file buddy!', 'Drop a folder on me to start!'],
   clean: ['Empty folders gone!', 'Cleaned up!'],
   schedule: ['I\'ll handle it!', 'Timer set~'],
-  auto: ['Watching for files~', 'Auto mode on!']
+  auto: ['Watching for files~', 'Auto mode on!'],
+  update: ['Psst — an update is ready!', 'New version downloaded~']
 };
 
 function randomMessage(key) {
@@ -230,6 +240,7 @@ async function init() {
     scheduleDesc.textContent = `Next: ${scheduleInterval.value}`;
   }
   updateTidyStatus();
+  renderUpdateState(await window.api.getUpdateState());
 
   await updateUndoButton();
   await loadProfiles();
@@ -960,6 +971,86 @@ addRuleBtn.addEventListener('click', () => {
   const inputs = customRulesList.querySelectorAll('.rule-ext');
   if (inputs.length) inputs[inputs.length - 1].focus();
 });
+
+// ═══════════════════════════════════════════
+// UPDATES — banner on the main view + status in Settings
+// ═══════════════════════════════════════════
+let updateState = null;
+let updateBannerDismissed = false;
+
+const UNSUPPORTED_UPDATE_TEXT = {
+  dev: 'Updates are off while running from source',
+  portable: "The portable version can't update itself — use the installer for auto-updates",
+  mac: "Auto-updates aren't available on macOS yet",
+  linux: 'Auto-updates need the AppImage build'
+};
+
+function renderUpdateState(state) {
+  const wasReady = updateState && updateState.status === 'ready';
+  updateState = state;
+  appVersion.textContent = state.currentVersion;
+
+  let text = 'Checks automatically every few hours';
+  let action = 'Check for updates';
+  let actionDisabled = false;
+  let primary = false;
+
+  switch (state.status) {
+    case 'checking':
+      text = 'Checking for updates…';
+      actionDisabled = true;
+      break;
+    case 'downloading':
+      text = `Downloading ${state.version}… ${state.progress}%`;
+      actionDisabled = true;
+      break;
+    case 'ready':
+      text = `Version ${state.version} is ready to install`;
+      action = 'Restart & update';
+      primary = true;
+      break;
+    case 'up-to-date':
+      text = "You're up to date";
+      break;
+    case 'error':
+      text = "Couldn't check for updates — try again later";
+      break;
+    case 'unsupported':
+      text = UNSUPPORTED_UPDATE_TEXT[state.reason] || 'Auto-updates are not available';
+      actionDisabled = true;
+      break;
+  }
+
+  updateStatusText.textContent = text;
+  updateStatusText.title = state.status === 'error' && state.error ? state.error : '';
+  updateActionBtn.textContent = action;
+  updateActionBtn.disabled = actionDisabled;
+  updateActionBtn.classList.toggle('btn-primary', primary);
+  updateActionBtn.classList.toggle('btn-soft', !primary);
+
+  const ready = state.status === 'ready';
+  updateBannerVersion.textContent = ready ? `version ${state.version}` : '';
+  updateBanner.classList.toggle('show', ready && !updateBannerDismissed);
+  if (ready && !wasReady && !updateBannerDismissed) showCompanionMessage('update');
+}
+
+updateActionBtn.addEventListener('click', async () => {
+  if (updateState && updateState.status === 'ready') {
+    window.api.installUpdate();
+  } else {
+    renderUpdateState(await window.api.checkForUpdates());
+  }
+});
+
+updateRestartBtn.addEventListener('click', () => window.api.installUpdate());
+
+updateLaterBtn.addEventListener('click', () => {
+  // Hide for this session — it still installs next time the app quits
+  updateBannerDismissed = true;
+  updateBanner.classList.remove('show');
+});
+
+window.api.onUpdateState(renderUpdateState);
 
 // ═══════════════════════════════════════════
 // SETTINGS — Appearance (live preview; saved with the rest of the settings)

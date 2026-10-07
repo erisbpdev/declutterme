@@ -425,6 +425,65 @@ button {
 }
 
 /* ═══════════════════════════════════════════
+   UPDATE BANNER — grows from 0 to auto height (grid 0fr -> 1fr) so the
+   content below glides down; the negative margin cancels the view's gap
+   while it's closed
+   ═══════════════════════════════════════════ */
+.update-banner {
+  display: grid;
+  grid-template-rows: 0fr;
+  flex-shrink: 0;
+  margin-bottom: -14px;
+  opacity: 0;
+  transition:
+    grid-template-rows 0.65s var(--ease),
+    margin-bottom 0.65s var(--ease),
+    opacity 0.5s var(--ease);
+}
+
+.update-banner.show {
+  grid-template-rows: 1fr;
+  margin-bottom: 0;
+  opacity: 1;
+}
+
+.update-banner-clip {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.update-banner-inner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 8px 8px 14px;
+  border-radius: var(--r-md);
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+}
+
+.update-banner-inner svg {
+  flex-shrink: 0;
+}
+
+.update-banner-text {
+  flex: 1;
+  min-width: 0;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.update-banner-text strong {
+  font-weight: 600;
+}
+
+.update-row {
+  padding-bottom: 0;
+}
+
+/* ═══════════════════════════════════════════
    FOLDER CARD
    ═══════════════════════════════════════════ */
 .folder-card {

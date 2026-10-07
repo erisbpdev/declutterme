@@ -6,12 +6,16 @@ const { createTray, updateTrayMenu, destroyTray } = require('./src/tray');
 const config = require('./src/config');
 const stats = require('./src/stats');
 const { getAllCategories } = require('./src/categories');
+const updater = require('./src/updater');
 
 let mainWindow = null;
 let undoStack = []; // Multi-level undo (max 10 batches)
 const MAX_UNDO_LEVELS = 10;
 let autoModeFolder = null;
 let scheduleTimer = null;
+// True once the app is really quitting (tray Quit, installing an update) —
+// the close handler must not just hide the window then
+let isQuitting = false;
 
 const SCHEDULE_INTERVALS = {
   'hourly': 60 * 60 * 1000,
@@ -43,7 +47,7 @@ function createWindow() {
   mainWindow.loadFile(path.join(__dirname, 'renderer', 'index.html'));
 
   mainWindow.on('close', (e) => {
-    if (isWatching() || scheduleTimer) {
+    if (!isQuitting && (isWatching() || scheduleTimer)) {
       e.preventDefault();
       mainWindow.hide();
     }
@@ -333,6 +337,13 @@ ipcMain.handle('preview-theme', (_, theme) => {
   applyTheme(theme);
 });
 
+// Updates
+ipcMain.handle('get-update-state', () => updater.getState());
+ipcMain.handle('check-for-updates', () => updater.check());
+ipcMain.handle('install-update', () => {
+  if (updater.install()) isQuitting = true;
+});
+
 ipcMain.handle('get-default-categories', () => {
   return Object.keys(getAllCategories());
 });
@@ -344,6 +355,15 @@ app.whenReady().then(() => {
   applyTheme(config.get().theme);
   createWindow();
   resumeSchedule();
+  updater.init((state) => {
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.webContents.send('update-state', state);
+    }
+  });
+});
+
+app.on('before-quit', () => {
+  isQuitting = true;
 });
 
 app.on('window-all-closed', () => {

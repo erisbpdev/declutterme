@@ -36,6 +36,12 @@ contextBridge.exposeInMainWorld('api', {
   getDefaultCategories: () => ipcRenderer.invoke('get-default-categories'),
   previewTheme: (theme) => ipcRenderer.invoke('preview-theme', theme),
 
+  // Updates
+  getUpdateState: () => ipcRenderer.invoke('get-update-state'),
+  checkForUpdates: () => ipcRenderer.invoke('check-for-updates'),
+  installUpdate: () => ipcRenderer.invoke('install-update'),
+  onUpdateState: (callback) => ipcRenderer.on('update-state', (_, state) => callback(state)),
+
   // Window controls
   minimizeWindow: () => ipcRenderer.send('window-minimize'),
   closeWindow: () => ipcRenderer.send('window-close'),

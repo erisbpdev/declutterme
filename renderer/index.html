@@ -48,6 +48,18 @@
           </div>
         </section>
 
+        <!-- Update banner — slides in once an update has downloaded -->
+        <div id="updateBanner" class="update-banner" aria-live="polite">
+          <div class="update-banner-clip">
+            <div class="update-banner-inner">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span class="update-banner-text"><strong>Update ready</strong> · <span id="updateBannerVersion"></span></span>
+              <button id="updateLaterBtn" class="btn btn-ghost btn-sm btn-muted">Later</button>
+              <button id="updateRestartBtn" class="btn btn-primary btn-sm">Restart</button>
+            </div>
+          </div>
+        </div>
+
         <!-- Folder card with drag & drop -->
         <div class="card folder-card" id="folderPanel">
           <div class="folder-main">
@@ -339,6 +351,18 @@
                 <span>Global hotkey</span>
                 <input type="text" id="hotkeyInput" class="input-sm" value="CommandOrControl+Shift+D" placeholder="Ctrl+Shift+D">
               </label>
+            </div>
+          </div>
+
+          <!-- Section: Updates -->
+          <div class="card section">
+            <h2 class="card-title">Updates</h2>
+            <div class="setting-row update-row">
+              <div class="setting-text">
+                <span class="setting-label">DeclutterMe <span id="appVersion"></span></span>
+                <span class="setting-desc" id="updateStatusText">Checks automatically every few hours</span>
+              </div>
+              <button id="updateActionBtn" class="btn btn-soft btn-sm">Check for updates</button>
             </div>
           </div>
 
