@@ -46,6 +46,7 @@ Desktop/
 | **Global Hotkey** | `Ctrl+Shift+D` organizes from anywhere (configurable) |
 | **Empty Folder Cleanup** | Removes empty category folders — never your own empty folders |
 | **Profiles & Stats** | Save folder + rule presets, and see how much Tidy has sorted for you |
+| **Dark Mode** | Follows Windows by default, or pick Light / Dark in Settings |
 | **System Tray** | Minimize to tray, right-click for quick actions |
 | **Cross-Platform** | Windows (NSIS + portable), macOS (DMG), Linux (AppImage) |
 | **Tidy Companion** | ASCII robot buddy with reactive expressions |

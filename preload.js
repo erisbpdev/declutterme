@@ -34,6 +34,7 @@ contextBridge.exposeInMainWorld('api', {
   saveConfig: (config) => ipcRenderer.invoke('save-config', config),
   resetConfig: () => ipcRenderer.invoke('reset-config'),
   getDefaultCategories: () => ipcRenderer.invoke('get-default-categories'),
+  previewTheme: (theme) => ipcRenderer.invoke('preview-theme', theme),
 
   // Window controls
   minimizeWindow: () => ipcRenderer.send('window-minimize'),

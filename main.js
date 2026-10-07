@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog, Notification, globalShortcut } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, Notification, globalShortcut, nativeTheme } = require('electron');
 const path = require('path');
 const { organizeFolder, undoOrganize, cleanEmptyFolders } = require('./src/organizer');
 const { startWatching, stopWatching, isWatching } = require('./src/watcher');
@@ -108,6 +108,11 @@ function toggleAuto(folder) {
   }
 
   updateTrayMenu(mainWindow, trayHandlers());
+}
+
+// Drives prefers-color-scheme in the renderer (and native scrollbars/menus)
+function applyTheme(theme) {
+  nativeTheme.themeSource = ['light', 'dark'].includes(theme) ? theme : 'system';
 }
 
 function showNotification(body) {
@@ -310,6 +315,7 @@ ipcMain.handle('save-config', (_, newConfig) => {
   // Schedule state is owned by the main process — don't let a stale
   // settings snapshot from the renderer clobber it
   config.save({ ...newConfig, schedule: config.get().schedule });
+  applyTheme(config.get().theme);
   const hotkeyRegistered = registerGlobalHotkey();
   return { ...config.get(), hotkeyRegistered };
 });
@@ -317,8 +323,14 @@ ipcMain.handle('save-config', (_, newConfig) => {
 ipcMain.handle('reset-config', () => {
   stopSchedule();
   const cfg = config.reset();
+  applyTheme(cfg.theme);
   registerGlobalHotkey();
   return cfg;
+});
+
+// Live preview while picking a theme in Settings (not saved until Save)
+ipcMain.handle('preview-theme', (_, theme) => {
+  applyTheme(theme);
 });
 
 ipcMain.handle('get-default-categories', () => {
@@ -329,6 +341,7 @@ ipcMain.handle('get-default-categories', () => {
 app.whenReady().then(() => {
   config.init(app.getPath('userData'));
   stats.init(app.getPath('userData'));
+  applyTheme(config.get().theme);
   createWindow();
   resumeSchedule();
 });

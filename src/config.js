@@ -15,6 +15,8 @@ const DEFAULT_CONFIG = {
     appsFolderName: 'Applications'
   },
   globalHotkey: 'CommandOrControl+Shift+D',
+  // 'system' follows Windows; 'light' / 'dark' override it
+  theme: 'system',
   cleanEmptyFolders: false,
   schedule: {
     enabled: false,
@@ -24,6 +26,8 @@ const DEFAULT_CONFIG = {
   },
   profiles: []
 };
+
+const THEMES = ['system', 'light', 'dark'];
 
 let configPath = '';
 let currentConfig = null;
@@ -97,6 +101,7 @@ function mergeWithDefaults(loaded) {
     schedule: { ...DEFAULT_CONFIG.schedule, ...(loaded.schedule || {}) },
     profiles: Array.isArray(loaded.profiles) ? loaded.profiles : [],
     globalHotkey: loaded.globalHotkey || DEFAULT_CONFIG.globalHotkey,
+    theme: THEMES.includes(loaded.theme) ? loaded.theme : DEFAULT_CONFIG.theme,
     cleanEmptyFolders: typeof loaded.cleanEmptyFolders === 'boolean' ? loaded.cleanEmptyFolders : false
   };
 }

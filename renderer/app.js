@@ -64,6 +64,7 @@ const hotkeyInput = document.getElementById('hotkeyInput');
 const saveProfileBtn = document.getElementById('saveProfileBtn');
 const profilesList = document.getElementById('profilesList');
 const pinnedFilesList = document.getElementById('pinnedFilesList');
+const themeControl = document.getElementById('themeControl');
 
 // DOM Elements — Stats
 const statsBackBtn = document.getElementById('statsBackBtn');
@@ -286,9 +287,16 @@ function showStats() {
   loadStats();
 }
 
+// Leaving Settings without saving puts back the theme that was saved
+async function leaveSettingsUnsaved() {
+  const saved = await window.api.getConfig();
+  await window.api.previewTheme(saved.theme);
+  showMain();
+}
+
 settingsBtn.addEventListener('click', showSettings);
-settingsBackBtn.addEventListener('click', showMain);
-cancelSettingsBtn.addEventListener('click', showMain);
+settingsBackBtn.addEventListener('click', leaveSettingsUnsaved);
+cancelSettingsBtn.addEventListener('click', leaveSettingsUnsaved);
 statsBtn.addEventListener('click', showStats);
 statsBackBtn.addEventListener('click', showMain);
 
@@ -858,6 +866,7 @@ async function loadSettingsIntoForm() {
   settingsData = await window.api.getConfig();
   defaultCategories = await window.api.getDefaultCategories();
 
+  renderThemeControl();
   renderCustomRules();
   renderExclusions();
   renderPinnedFiles();
@@ -950,6 +959,24 @@ addRuleBtn.addEventListener('click', () => {
   renderCustomRules();
   const inputs = customRulesList.querySelectorAll('.rule-ext');
   if (inputs.length) inputs[inputs.length - 1].focus();
+});
+
+// ═══════════════════════════════════════════
+// SETTINGS — Appearance (live preview; saved with the rest of the settings)
+// ═══════════════════════════════════════════
+function renderThemeControl() {
+  const current = settingsData.theme || 'system';
+  themeControl.querySelectorAll('[data-theme-value]').forEach(btn => {
+    btn.setAttribute('aria-checked', String(btn.dataset.themeValue === current));
+  });
+}
+
+themeControl.querySelectorAll('[data-theme-value]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    settingsData.theme = btn.dataset.themeValue;
+    renderThemeControl();
+    window.api.previewTheme(settingsData.theme);
+  });
 });
 
 // ═══════════════════════════════════════════
@@ -1149,6 +1176,7 @@ saveSettingsBtn.addEventListener('click', async () => {
 
 resetSettingsBtn.addEventListener('click', async () => {
   settingsData = await window.api.resetConfig();
+  renderThemeControl();
   renderCustomRules();
   renderExclusions();
   renderPinnedFiles();
