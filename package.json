@@ -1,6 +1,6 @@
 {
   "name": "declutterme",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Your friendly desktop buddy that organizes files into tidy folders by type",
   "author": "Eris <erisbp.dev@gmail.com>",
   "main": "main.js",

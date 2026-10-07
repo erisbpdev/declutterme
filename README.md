@@ -35,11 +35,17 @@ Desktop/
 |---------|-------------|
 | **One-Click Organize** | Select a folder, press the button, done |
 | **Auto Mode** | Background file watcher — new files get sorted the moment they land |
-| **Instant Undo** | One click restores all files to their original location |
-| **Custom Rules** | Map any extension to any folder (e.g. `.blend` -> `3D Models`) |
+| **Preview & Pick** | See exactly where every file will go, untick the ones you want left alone |
+| **Pinned Files** | Pin a file once and it's never moved — not by the button, auto mode, schedule or hotkey |
+| **Multi-Level Undo** | Undo the last 10 organize runs, without ever overwriting newer files |
+| **Custom Rules** | Route by extension (`.blend` -> `3D Models`) or by name pattern (`Screenshot*` -> `Screenshots`) |
 | **File Exclusions** | Exclude specific extensions from being organized |
 | **Folder Name Overrides** | Rename default category folders (e.g. `Images` -> `Pictures`) |
 | **Shortcut Organization** | Categorize Windows `.lnk` shortcuts as Games or Applications |
+| **Schedule** | Organize hourly, every 6h, daily or weekly — survives app restarts |
+| **Global Hotkey** | `Ctrl+Shift+D` organizes from anywhere (configurable) |
+| **Empty Folder Cleanup** | Removes empty category folders — never your own empty folders |
+| **Profiles & Stats** | Save folder + rule presets, and see how much Tidy has sorted for you |
 | **System Tray** | Minimize to tray, right-click for quick actions |
 | **Cross-Platform** | Windows (NSIS + portable), macOS (DMG), Linux (AppImage) |
 | **Tidy Companion** | ASCII robot buddy with reactive expressions |
@@ -57,7 +63,8 @@ Tidy is a retro ASCII robot face that reacts to what's happening in the app:
 [>_<]  Error — something went wrong
 [o_O]  Undo — restoring files
 [@_@]  Settings — tweaking config
-[._.] Auto — watching in background
+[•_•]  Auto — watching in background
+[°_°]  Preview — just peeking
 [^-^]  Tidy — folder already clean
 ```
 
@@ -91,12 +98,18 @@ All category names can be overridden in Settings.
 Open **Settings** (gear icon in the title bar) to configure:
 
 ### Custom Rules
-Route specific extensions to custom folder names. Custom rules take priority over default categories.
+Each rule matches either by **extension** or by **file name**. Name rules use simple wildcards — `*` matches anything, `?` matches exactly one character — and ignore upper/lowercase.
 
 ```
-.psd  -->  Design Files
-.blend  -->  3D Models
+Ext   .psd           -->  Design Files
+Ext   .blend         -->  3D Models
+Name  Screenshot*    -->  Screenshots
+Name  *invoice*      -->  Finance
+Name  README         -->  Notes        (name rules work on files without an extension too)
 ```
+
+### Preview & Pinned Files
+**Preview** opens a list of every file grouped by where it'll go. Untick files to skip them just this once, or hit the 📌 pin to make DeclutterMe leave a file alone forever. Pinned files are listed in Settings, where you can unpin them.
 
 ### Excluded Extensions
 Prevent certain file types from being organized. Add extensions like `.tmp`, `.bak`, `.log` to the exclusion list.
@@ -131,16 +144,19 @@ Configuration is stored as JSON in the platform's user data directory:
 
 When organizing a file, DeclutterMe checks in this order:
 
-1. **Custom rules** — if the extension matches a user-defined rule, use that folder
-2. **Shortcut analysis** — if enabled and the file is `.lnk`, categorize as Games/Applications
-3. **Default categories** — look up the extension in the built-in category map
-4. **Folder name override** — apply any custom folder name from settings
-5. **Fallback** — move to "Other"
+1. **Pinned?** — pinned files are never moved
+2. **Name rules** — if the file name matches a pattern rule, use that folder
+3. **Shortcut analysis** — if enabled and the file is `.lnk`, categorize as Games/Applications
+4. **Extension rules** — if the extension matches a user-defined rule, use that folder
+5. **Default categories** — look up the extension in the built-in category map
+6. **Folder name override** — apply any custom folder name from settings
+7. **Fallback** — move to "Other"
 
 Files that are always skipped:
 - System files (`desktop.ini`, `thumbs.db`, `.DS_Store`)
 - Hidden files (starting with `.`)
 - Shortcut/config files (`.lnk`, `.url`, `.ini`) unless shortcut org is enabled
+- Files without an extension, unless a name rule claims them
 
 ---
 
@@ -155,8 +171,8 @@ Files that are always skipped:
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/DeclutterMe.git
-cd DeclutterMe/app
+git clone https://github.com/erisbpdev/declutterme.git
+cd declutterme
 
 # Install dependencies
 npm install
@@ -164,6 +180,14 @@ npm install
 # Run in development
 npm start
 ```
+
+### Run Tests
+
+```bash
+npm test
+```
+
+Uses Node's built-in test runner — no extra dependencies. Tests live in `test/` and cover sorting, rules, pins, undo and cleanup against real temp folders.
 
 ### Build Distributables
 
@@ -191,7 +215,7 @@ git tag v1.0.0
 git push origin v1.0.0
 ```
 
-The workflow builds on Windows, macOS, and Linux in parallel using Node.js 22 and electron-builder.
+The workflow runs the test suite, then builds on Windows, macOS, and Linux in parallel using Node.js 22 and electron-builder.
 
 ---
 
@@ -207,14 +231,18 @@ app/
     organizer.js        Core file organization engine with undo
     categories.js       100+ extensions mapped to 10 categories
     config.js           Settings persistence (JSON)
+    stats.js            Usage stats (files organized, sessions, top categories)
     watcher.js          Chokidar-based auto-mode file watcher
     shortcuts.js        Windows .lnk shortcut analyzer (PowerShell)
     tray.js             System tray icon & context menu
 
   renderer/
-    index.html          App UI layout (frameless glass window)
+    index.html          App UI layout (frameless window)
     app.js              Frontend logic, state, companion system
-    styles.css          Frutiger Aero glassmorphism design
+    styles.css          Japanese stationery / sakura paper design
+
+  test/
+    organizer.test.js   Organizer test suite (node:test)
 
   assets/
     icon.png            App icon
@@ -242,7 +270,8 @@ website/
 | Packaging | electron-builder |
 | Landing page | Next.js 14, React 18 |
 | Glass effects | Custom SVG displacement filters |
-| Design | Frutiger Aero / Glassmorphism |
+| Design | Retro Japanese stationery — warm paper & sakura ink |
+| Tests | Node.js built-in test runner |
 | CI/CD | GitHub Actions |
 
 ---
