@@ -126,14 +126,14 @@ const MESSAGES = {
   success: ['All sorted!', 'Nice and tidy!', 'Done! That feels good~', 'Files found a home!'],
   error: ['Oops, something went wrong!', 'Hmm, that didn\'t work...'],
   undo: ['Putting things back!', 'Reversing~'],
-  tidy: ['Already spotless!', 'Nothing to do — nice!', 'You\'re so tidy already!'],
+  tidy: ['Already spotless!', 'Nothing to do. Nice!', 'You\'re so tidy already!'],
   preview: ['Here\'s what I\'d do~', 'Just a peek!', 'Preview time!'],
   greet: ['Hi! I\'m Tidy!', 'Welcome back!', 'Let\'s clean up!'],
-  firstRun: ['Hi! I\'m Tidy — your file buddy!', 'Drop a folder on me to start!'],
+  firstRun: ['Hi! I\'m Tidy, your file buddy!', 'Drop a folder on me to start!'],
   clean: ['Empty folders gone!', 'Cleaned up!'],
   schedule: ['I\'ll handle it!', 'Timer set~'],
   auto: ['Watching for files~', 'Auto mode on!'],
-  update: ['Psst — an update is ready!', 'New version downloaded~']
+  update: ['Psst, an update is ready!', 'New version downloaded~']
 };
 
 function randomMessage(key) {
@@ -451,7 +451,7 @@ function renderPreview() {
         <span class="preview-file-name" title="${escapeHtml(item.file)}">${escapeHtml(item.file)}</span>
         ${item.rule ? `<span class="preview-rule" title="Matched rule">${escapeHtml(item.rule)}</span>` : ''}
         ${isPinnedGroup ? `<span class="preview-dest">→ ${escapeHtml(item.category)}</span>` : ''}
-        <button class="preview-pin${item.pinned ? ' active' : ''}" title="${item.pinned ? 'Unpin — allow moving' : 'Pin — never move this file'}">${PIN_ICON}</button>
+        <button class="preview-pin${item.pinned ? ' active' : ''}" title="${item.pinned ? 'Unpin so it can be moved' : 'Pin so it never moves'}">${PIN_ICON}</button>
       `;
 
       const check = row.querySelector('.preview-file-check');
@@ -484,7 +484,7 @@ function renderPreview() {
   };
 
   [...groups.keys()].sort().forEach(cat => renderGroup(cat, groups.get(cat), false));
-  if (pinnedItems.length) renderGroup('Pinned — never moved', pinnedItems, true);
+  if (pinnedItems.length) renderGroup('Pinned (won\'t be moved)', pinnedItems, true);
   previewList.scrollTop = scrollTop;
 
   // Footer + select-all state
@@ -623,7 +623,7 @@ undoBtn.addEventListener('click', async () => {
   try {
     const results = await window.api.undoLast();
     if (results.restored.length > 0) {
-      addLogEntry(`Restored ${results.restored.length} files to original location`, 'success');
+      addLogEntry(`Put ${results.restored.length} file${results.restored.length !== 1 ? 's' : ''} back where they were`, 'success');
     }
     if (results.errors.length > 0) {
       results.errors.forEach(e => {
@@ -676,7 +676,7 @@ function displayResults(results, isAuto = false, isPreview = false) {
   const prefix = isPreview ? '[Preview] ' : isAuto ? '[Auto] ' : '';
 
   if (results.moved.length === 0 && results.errors.length === 0) {
-    addLogEntry(`${prefix}No files to organize — already tidy!`, 'success');
+    addLogEntry(`${prefix}Nothing to organize. Already tidy!`, 'success');
     return;
   }
 
@@ -774,7 +774,7 @@ async function loadStats() {
   });
 
   if (entries.length === 0) {
-    catContainer.innerHTML = '<p class="stats-empty">No data yet — organize some files!</p>';
+    catContainer.innerHTML = '<p class="stats-empty">No data yet. Organize some files first!</p>';
   }
 }
 
@@ -980,7 +980,7 @@ let updateBannerDismissed = false;
 
 const UNSUPPORTED_UPDATE_TEXT = {
   dev: 'Updates are off while running from source',
-  portable: "The portable version can't update itself — use the installer for auto-updates",
+  portable: "The portable version can't update itself. Use the installer to get updates automatically.",
   mac: "Auto-updates aren't available on macOS yet",
   linux: 'Auto-updates need the AppImage build'
 };
@@ -1013,7 +1013,7 @@ function renderUpdateState(state) {
       text = "You're up to date";
       break;
     case 'error':
-      text = "Couldn't check for updates — try again later";
+      text = "Couldn't check for updates. Try again later.";
       break;
     case 'unsupported':
       text = UNSUPPORTED_UPDATE_TEXT[state.reason] || 'Auto-updates are not available';
@@ -1258,9 +1258,9 @@ saveSettingsBtn.addEventListener('click', async () => {
 
   const saved = await window.api.saveConfig(settingsData);
   await loadProfiles();
-  addLogEntry('Settings saved successfully', 'success');
+  addLogEntry('Settings saved', 'success');
   if (saved && saved.hotkeyRegistered === false) {
-    addLogEntry(`Couldn't register hotkey ${escapeHtml(settingsData.globalHotkey)} — another app may be using it`, 'error');
+    addLogEntry(`Couldn't set the hotkey ${escapeHtml(settingsData.globalHotkey)}. Another app might be using it.`, 'error');
   }
   showMain();
 });

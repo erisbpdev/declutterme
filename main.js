@@ -141,7 +141,7 @@ function registerGlobalHotkey() {
     console.error('Failed to register global hotkey:', err);
   }
   if (!ok) {
-    showNotification(`Couldn't register hotkey ${hotkey} — it may be in use by another app`);
+    showNotification(`Couldn't set the hotkey ${hotkey}. Another app might be using it.`);
   }
   return ok;
 }

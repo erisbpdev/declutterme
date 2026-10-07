@@ -45,11 +45,11 @@ function updateTrayMenu(mainWindow, { onDeclutter, onToggleAuto, isAutoOn }) {
     },
     { type: 'separator' },
     {
-      label: 'Declutter Now',
+      label: 'Declutter now',
       click: onDeclutter
     },
     {
-      label: `Auto Mode: ${isAutoOn ? 'ON' : 'OFF'}`,
+      label: `Auto mode: ${isAutoOn ? 'on' : 'off'}`,
       click: onToggleAuto
     },
     { type: 'separator' },

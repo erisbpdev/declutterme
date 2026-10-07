@@ -1,85 +1,85 @@
 # DeclutterMe
 
-**Your friendly desktop buddy that organizes files into tidy folders by type.**
+**A free desktop app that sorts your files into folders. Meet Tidy `[^_^]`, who does the sorting.**
 
-DeclutterMe is a lightweight Electron app with a companion called **Tidy** `[^_^]` — a retro ASCII robot that lives in your system tray and keeps your desktop clean. One click and Tidy sorts your files into categorized folders. No config needed, works out of the box.
+You pick a folder (your Desktop by default), press **Declutter now**, and Tidy moves every file into a folder by type: Documents, Images, Audio, Video and so on. You can preview the moves first, pin files that should stay put, add your own rules, and undo if you change your mind.
 
 ![Electron](https://img.shields.io/badge/Electron-30-47848F?logo=electron&logoColor=white)
 ![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20Linux-blue)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
----
-
-## How It Works
-
-1. **Pick a folder** — defaults to your Desktop
-2. **Click "Declutter Now"** — Tidy scans every file and moves them into categorized folders
-3. **Done** — Documents, Images, Audio, Video, Archives, Code, and more
-
-Tidy recognizes **100+ file extensions** across **10 categories** and handles duplicates, hidden files, and system files automatically.
-
 ```
 Desktop/
-  report.pdf        -->  Documents/report.pdf
-  vacation.jpg      -->  Images/vacation.jpg
-  song.mp3          -->  Audio/song.mp3
-  project.zip       -->  Archives/project.zip
-  app.exe           -->  Executables/app.exe
+  report.pdf          ->  Documents/report.pdf
+  vacation.jpg        ->  Images/vacation.jpg
+  song.mp3            ->  Audio/song.mp3
+  Screenshot 1.png    ->  Screenshots/Screenshot 1.png    (your own rule)
+  taxes-2026.xlsx         stays where it is               (pinned)
 ```
 
 ---
 
-## Features
+## Download
 
-| Feature | Description |
-|---------|-------------|
-| **One-Click Organize** | Select a folder, press the button, done |
-| **Auto Mode** | Background file watcher — new files get sorted the moment they land |
-| **Preview & Pick** | See exactly where every file will go, untick the ones you want left alone |
-| **Pinned Files** | Pin a file once and it's never moved — not by the button, auto mode, schedule or hotkey |
-| **Multi-Level Undo** | Undo the last 10 organize runs, without ever overwriting newer files |
-| **Custom Rules** | Route by extension (`.blend` -> `3D Models`) or by name pattern (`Screenshot*` -> `Screenshots`) |
-| **File Exclusions** | Exclude specific extensions from being organized |
-| **Folder Name Overrides** | Rename default category folders (e.g. `Images` -> `Pictures`) |
-| **Shortcut Organization** | Categorize Windows `.lnk` shortcuts as Games or Applications |
-| **Schedule** | Organize hourly, every 6h, daily or weekly — survives app restarts |
-| **Global Hotkey** | `Ctrl+Shift+D` organizes from anywhere (configurable) |
-| **Empty Folder Cleanup** | Removes empty category folders — never your own empty folders |
-| **Profiles & Stats** | Save folder + rule presets, and see how much Tidy has sorted for you |
-| **Dark Mode** | Follows Windows by default, or pick Light / Dark in Settings |
-| **Auto-Updates** | Installer builds update themselves from GitHub Releases |
-| **System Tray** | Minimize to tray, right-click for quick actions |
-| **Cross-Platform** | Windows (NSIS + portable), macOS (DMG), Linux (AppImage) |
-| **Tidy Companion** | ASCII robot buddy with reactive expressions |
+Grab the latest version from the [releases page](https://github.com/erisbpdev/declutterme/releases/latest).
+
+| System | File | Updates itself? |
+|--------|------|-----------------|
+| Windows | `DeclutterMe-Setup-x.y.z.exe` (installer) | Yes |
+| Windows | `DeclutterMe-x.y.z.exe` (portable, no install) | No |
+| macOS (Apple Silicon) | `DeclutterMe-x.y.z-arm64.dmg` | No |
+| Linux | `DeclutterMe-x.y.z.AppImage` | Yes |
+
+The builds aren't code-signed yet, so the first launch needs one extra click. On Windows, choose **More info → Run anyway**. On macOS, right-click the app and choose **Open**.
+
+There's no Intel Mac build at the moment.
 
 ---
 
-## Tidy — The Companion
+## What it does
 
-Tidy is a retro ASCII robot face that reacts to what's happening in the app:
-
-```
-[^_^]  Idle — ready and waiting
-[o_o]  Working — organizing your files
-[*_*]  Success — files moved!
-[>_<]  Error — something went wrong
-[o_O]  Undo — restoring files
-[@_@]  Settings — tweaking config
-[•_•]  Auto — watching in background
-[°_°]  Preview — just peeking
-[^-^]  Tidy — folder already clean
-```
-
-Tidy lives on its own little glowing screen at the top of the app. Messages appear right on the screen and settle back to a resting line after a few seconds, and the status line underneath shows what Tidy is up to (idle, watching a folder, or on a schedule).
+| Feature | Details |
+|---------|---------|
+| **One-click sorting** | 100+ file types in 10 categories, out of the box |
+| **Preview** | See where every file will go before anything moves. Untick a file to skip it once |
+| **Pinned files** | Pin a file and it never moves, whether you sort by hand, on a schedule, by hotkey or in auto mode |
+| **Custom rules** | Match by extension (`.blend` → `3D Models`) or by name (`Screenshot*` → `Screenshots`) |
+| **Auto mode** | Watches the folder and sorts new files as they arrive |
+| **Schedule** | Hourly, every 6 hours, daily or weekly. Keeps time across restarts |
+| **Undo** | Goes back up to 10 runs. If a new file took an old file's spot, it gets a number instead of being replaced |
+| **Global hotkey** | `Ctrl+Shift+D` sorts from any app. You can change it |
+| **Cleanup** | Removes empty folders with Tidy's folder names. Your other empty folders stay |
+| **Excluded types** | File extensions you never want touched |
+| **Folder names** | Rename the default folders, e.g. `Images` → `Pictures` |
+| **Shortcuts (Windows)** | Sort `.lnk` shortcuts into Games and Applications |
+| **Profiles & stats** | Save folder + rule presets, see how many files Tidy has sorted |
+| **Light & dark** | Follows your system, or pick one in Settings |
+| **Auto-updates** | The Windows installer and Linux AppImage download new versions and install them on restart |
+| **Tray** | Keeps running in the tray while auto mode or a schedule is on |
 
 ---
 
-## File Categories
+## Tidy
 
-DeclutterMe sorts files into these default categories:
+Tidy lives on a little screen at the top of the app. Its messages show up there and go back to a resting line after a few seconds. The line underneath says what it's doing: idle, watching a folder, or waiting for the next scheduled run.
 
-| Category | Extensions |
-|----------|-----------|
+```
+[^_^]  idle
+[o_o]  sorting files
+[*_*]  done
+[>_<]  something went wrong
+[o_O]  undoing
+[•_•]  auto mode is on
+[°_°]  showing a preview
+[^-^]  nothing to sort, already tidy
+```
+
+---
+
+## File categories
+
+| Category | Some of the extensions |
+|----------|------------------------|
 | **Documents** | pdf, doc, docx, txt, xls, xlsx, ppt, pptx, odt, rtf, csv, epub, md |
 | **Images** | jpg, jpeg, png, gif, bmp, svg, webp, ico, tiff, raw, heic, psd, ai, eps |
 | **Audio** | mp3, wav, flac, aac, ogg, wma, m4a, opus, aiff, midi |
@@ -89,236 +89,132 @@ DeclutterMe sorts files into these default categories:
 | **Executables** | exe, msi, app, deb, rpm, appimage, apk, jar |
 | **Fonts** | ttf, otf, woff, woff2, eot |
 | **Design** | fig, sketch, xd, indd, blend, obj, fbx, stl |
-| **Other** | Everything else |
+| **Other** | anything else |
 
-All category names can be overridden in Settings.
-
----
-
-## Customization
-
-Open **Settings** (gear icon in the title bar) to configure:
-
-### Custom Rules
-Each rule matches either by **extension** or by **file name**. Name rules use simple wildcards — `*` matches anything, `?` matches exactly one character — and ignore upper/lowercase.
-
-```
-Ext   .psd           -->  Design Files
-Ext   .blend         -->  3D Models
-Name  Screenshot*    -->  Screenshots
-Name  *invoice*      -->  Finance
-Name  README         -->  Notes        (name rules work on files without an extension too)
-```
-
-### Preview & Pinned Files
-**Preview** opens a list of every file grouped by where it'll go. Untick files to skip them just this once, or hit the 📌 pin to make DeclutterMe leave a file alone forever. Pinned files are listed in Settings, where you can unpin them.
-
-### Excluded Extensions
-Prevent certain file types from being organized. Add extensions like `.tmp`, `.bak`, `.log` to the exclusion list.
-
-### Folder Name Overrides
-Rename any default category folder:
-
-```
-Documents  -->  My Documents
-Images     -->  Pictures
-Video      -->  Movies
-```
-
-### Shortcut Organization (Windows)
-When enabled, DeclutterMe analyzes `.lnk` shortcut targets to determine if they point to games or applications. Detection checks against 25+ game platform path indicators (Steam, Epic, Riot, Ubisoft, etc.) and 14 known launcher executables.
+The full list is in [`src/categories.js`](src/categories.js).
 
 ---
 
-## Settings Storage
+## Settings
 
-Configuration is stored as JSON in the platform's user data directory:
+Open **Settings** with the gear icon in the title bar.
 
-| Platform | Path |
-|----------|------|
+### Custom rules
+
+Each rule matches either by **extension** or by **file name**. In name rules, `*` matches anything and `?` matches exactly one character. Upper and lower case don't matter.
+
+```
+Ext   .psd           ->  Design Files
+Ext   .blend         ->  3D Models
+Name  Screenshot*    ->  Screenshots
+Name  *invoice*      ->  Finance
+Name  README         ->  Notes        (name rules also work on files with no extension)
+```
+
+### Preview and pinned files
+
+**Preview** lists every file grouped by the folder it's going to. Untick a file to skip it this time, or click the pin to keep it where it is for good. Pinned files show up in Settings, where you can unpin them.
+
+### Where settings are saved
+
+| System | Path |
+|--------|------|
 | Windows | `%APPDATA%\DeclutterMe\settings.json` |
 | macOS | `~/Library/Application Support/DeclutterMe/settings.json` |
 | Linux | `~/.config/DeclutterMe/settings.json` |
 
----
+### How Tidy picks a folder
 
-## Organization Priority
+For each file, in this order:
 
-When organizing a file, DeclutterMe checks in this order:
+1. **Pinned?** Then it stays.
+2. **Name rules.** If the name matches one, that folder wins.
+3. **Shortcuts.** If shortcut sorting is on and the file is a `.lnk`, it goes to Games or Applications.
+4. **Extension rules.** Your own rules by extension.
+5. **Built-in categories.** The default folder for that extension, using your renamed folder name if you set one.
+6. **Other.** Anything left over.
 
-1. **Pinned?** — pinned files are never moved
-2. **Name rules** — if the file name matches a pattern rule, use that folder
-3. **Shortcut analysis** — if enabled and the file is `.lnk`, categorize as Games/Applications
-4. **Extension rules** — if the extension matches a user-defined rule, use that folder
-5. **Default categories** — look up the extension in the built-in category map
-6. **Folder name override** — apply any custom folder name from settings
-7. **Fallback** — move to "Other"
-
-Files that are always skipped:
-- System files (`desktop.ini`, `thumbs.db`, `.DS_Store`)
-- Hidden files (starting with `.`)
-- Shortcut/config files (`.lnk`, `.url`, `.ini`) unless shortcut org is enabled
-- Files without an extension, unless a name rule claims them
+Always skipped: system files (`desktop.ini`, `thumbs.db`, `.DS_Store`), hidden files starting with `.`, `.lnk` / `.url` / `.ini` files (unless shortcut sorting is on), and files with no extension (unless a name rule matches them).
 
 ---
 
-## Getting Started
+## Running it from source
 
-### Prerequisites
-
-- [Node.js](https://nodejs.org/) 18+
-- npm
-
-### Install & Run
+You need [Node.js](https://nodejs.org/) 18 or newer.
 
 ```bash
-# Clone the repository
 git clone https://github.com/erisbpdev/declutterme.git
 cd declutterme
-
-# Install dependencies
 npm install
-
-# Run in development
 npm start
 ```
 
-### Run Tests
+Updates are switched off when running from source.
+
+### Tests
 
 ```bash
 npm test
 ```
 
-Uses Node's built-in test runner — no extra dependencies. Tests live in `test/` and cover sorting, rules, pins, undo and cleanup against real temp folders.
+This uses Node's built-in test runner, so there's nothing extra to install. The tests in `test/` sort, pin, undo and clean up real files in temporary folders.
 
-### Build Distributables
+### Building
 
 ```bash
-# Build for current platform
 npm run build
 ```
 
-Output will be in `app/dist/`:
-
-| Platform | Output |
-|----------|--------|
-| Windows | NSIS installer + portable `.exe` |
-| macOS | `.dmg` |
-| Linux | `.AppImage` |
+The builds end up in `dist/`: an NSIS installer and a portable `.exe` on Windows, a `.dmg` on macOS and an `.AppImage` on Linux.
 
 ---
 
-## CI/CD
+## Releasing a new version
 
-A GitHub Actions workflow (`.github/workflows/build.yml`) builds and publishes releases automatically when a version tag is pushed:
+GitHub Actions (`.github/workflows/build.yml`) runs the tests and builds all three systems whenever a version tag is pushed.
 
-```bash
-git tag v1.0.0
-git push origin v1.0.0
-```
-
-The workflow runs the test suite, then builds on Windows, macOS, and Linux in parallel using Node.js 22 and electron-builder.
-
-### Releasing an update
-
-1. Bump `version` in `package.json` and commit
-2. Tag and push: `git tag v1.2.1 && git push origin v1.2.1`
-3. CI builds everything into a **draft** GitHub release — check it, then hit **Publish**
-4. Installed copies pick it up within a few hours (or via Settings → Updates → Check for updates), download it in the background, and install on the next restart
-
-Auto-updates work for the Windows installer and the Linux AppImage. The portable `.exe` can't replace itself, and macOS needs a signed build, so those two update manually.
+1. Bump `version` in `package.json` and commit.
+2. Tag it and push the tag: `git tag v1.2.1 && git push origin v1.2.1`
+3. The build creates a **draft** release on GitHub. Check the files, then press **Publish**.
+4. Installed copies notice the new version within a few hours (or right away via Settings → Updates → Check for updates), download it in the background and install it on the next restart.
 
 ---
 
-## Project Structure
+## Project structure
 
 ```
-app/
-  main.js               Electron main process — app lifecycle, IPC, tray
-  preload.js            Secure IPC bridge (contextBridge)
-  package.json          Dependencies & electron-builder config
+main.js               Main process: window, tray, IPC, schedule, hotkey
+preload.js            The bridge between the window and the main process
 
-  src/
-    organizer.js        Core file organization engine with undo
-    categories.js       100+ extensions mapped to 10 categories
-    config.js           Settings persistence (JSON)
-    stats.js            Usage stats (files organized, sessions, top categories)
-    updater.js          Auto-updates from GitHub Releases (electron-updater)
-    watcher.js          Chokidar-based auto-mode file watcher
-    shortcuts.js        Windows .lnk shortcut analyzer (PowerShell)
-    tray.js             System tray icon & context menu
+src/
+  organizer.js        Sorting, rules, pins, undo and cleanup
+  categories.js       Extension → category map
+  config.js           Settings (JSON)
+  stats.js            Files sorted, sessions, top categories
+  updater.js          Auto-updates from GitHub Releases
+  watcher.js          Auto mode (chokidar)
+  shortcuts.js        Reads .lnk targets on Windows (PowerShell)
+  tray.js             Tray icon and menu
 
-  renderer/
-    index.html          App UI layout (frameless window)
-    app.js              Frontend logic, state, companion system
-    styles.css          Calm design — warm neutrals, sakura accent, Tidy's screen
-    fonts/              Bundled Instrument Sans + VT323 (OFL)
+renderer/
+  index.html          Layout
+  app.js              Everything on screen, including Tidy
+  styles.css          Styles, light and dark
+  fonts/              Instrument Sans and VT323 (SIL Open Font License)
 
-  test/
-    organizer.test.js   Organizer test suite (node:test)
-
-  assets/
-    icon.png            App icon
-
-website/
-  app/
-    page.js             Next.js landing page
-    layout.js           Root layout & metadata
-    globals.css         Landing page styles
-  components/
-    GlassSurface.js     SVG filter glass distortion component
-    GlassSurface.css    Glass surface styles
-  package.json          Next.js dependencies
+test/
+  organizer.test.js   Tests for the organizer
 ```
+
+The website lives in its own repo: [erisbpdev/declutterme-web](https://github.com/erisbpdev/declutterme-web).
 
 ---
 
-## Tech Stack
+## Built with
 
-| Component | Technology |
-|-----------|-----------|
-| Desktop app | Electron 30 |
-| File watching | Chokidar 3.6 |
-| Shortcut analysis | PowerShell (Windows COM) |
-| Packaging | electron-builder |
-| Landing page | Next.js 14, React 18 |
-| Glass effects | Custom SVG displacement filters |
-| Design | Calm warm neutrals, one sakura accent, pixel-font companion screen |
-| Tests | Node.js built-in test runner |
-| CI/CD | GitHub Actions |
+Electron 30, chokidar, electron-updater and electron-builder. Tests use Node's built-in test runner, and releases are built with GitHub Actions.
 
----
-
-## Architecture
-
-```
-┌─────────────────────────────────┐
-│        Renderer Process         │
-│  index.html + app.js + CSS      │
-│  Companion system, settings UI  │
-└────────────┬────────────────────┘
-             │ IPC (contextBridge)
-┌────────────┴────────────────────┐
-│         Main Process            │
-│  main.js + tray.js              │
-│  Window management, IPC routing │
-└────────────┬────────────────────┘
-             │
-    ┌────────┼────────┬───────────┐
-    │        │        │           │
-┌───┴──┐ ┌──┴───┐ ┌──┴──┐ ┌─────┴────┐
-│config│ │organ-│ │watch│ │shortcuts │
-│ .js  │ │izer  │ │er   │ │  .js     │
-│      │ │ .js  │ │ .js │ │(Windows) │
-└──────┘ └──┬───┘ └─────┘ └──────────┘
-             │
-        ┌────┴────┐
-        │catego-  │
-        │ries.js  │
-        └─────────┘
-```
-
-**Security:** Context isolation is enabled. The renderer has no direct access to Node.js APIs — all system interactions go through the preload bridge (`preload.js`) which exposes a minimal, typed API surface.
+The window can't touch your files directly: context isolation is on, and everything goes through a small API in `preload.js`.
 
 ---
 
@@ -328,4 +224,4 @@ MIT
 
 ---
 
-**Made with `[^_^]` by [Eris](mailto:erisbp.dev@gmail.com)**
+Made with `[^_^]` by [Eris](https://www.erisbp.com)

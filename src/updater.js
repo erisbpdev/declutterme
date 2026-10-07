@@ -64,7 +64,7 @@ function init(onStateChange) {
     if (Notification.isSupported()) {
       new Notification({
         title: 'DeclutterMe',
-        body: `Version ${info.version} is ready — it installs when you restart the app.`
+        body: `Version ${info.version} is ready. It installs when you restart DeclutterMe.`
       }).show();
     }
   });
