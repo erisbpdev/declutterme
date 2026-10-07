@@ -10,7 +10,6 @@
 </head>
 <body>
   <div class="window-frame">
-    <!-- Aero glass title bar -->
     <div class="title-bar" id="titleBar">
       <div class="title-bar-left">
         <div class="title-bar-orb">
@@ -19,6 +18,13 @@
         <span class="title-bar-text">DeclutterMe</span>
       </div>
       <div class="title-bar-controls">
+        <button class="title-btn stats" id="statsBtn" title="Stats">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10"/>
+            <line x1="12" y1="20" x2="12" y2="4"/>
+            <line x1="6" y1="20" x2="6" y2="14"/>
+          </svg>
+        </button>
         <button class="title-btn settings" id="settingsBtn" title="Settings">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="3"/>
@@ -37,12 +43,17 @@
     <!-- Main content area -->
     <div class="app-container">
 
+      <!-- Toast message — floats above all views -->
+      <div id="companionMessage" class="companion-message" style="display:none">
+        <span id="companionMessageText"></span>
+      </div>
+
       <!-- ═══════════ MAIN VIEW ═══════════ -->
       <div id="mainView" class="view active">
 
+
         <!-- Hero / Header -->
         <div class="header">
-          <div class="header-shine"></div>
           <div class="logo">
             <div class="logo-orb">
               <span id="companionFace" class="companion-face">[^_^]</span>
@@ -54,26 +65,42 @@
           </div>
         </div>
 
-        <!-- Glass Panel: Folder Selector -->
-        <div class="glass-panel">
-          <div class="glass-panel-shine"></div>
+        <!-- Folder Selector with drag & drop -->
+        <div class="glass-panel" id="folderPanel">
           <label class="section-label">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
             Target Folder
           </label>
           <div class="folder-input">
-            <input type="text" id="folderPath" readonly placeholder="Select a folder...">
+            <input type="text" id="folderPath" readonly placeholder="Select or drop a folder...">
             <button id="browseFolderBtn" class="btn-chrome" title="Browse">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/>
               </svg>
             </button>
           </div>
-          <button id="resetDesktopBtn" class="btn-link">Reset to Desktop</button>
+          <!-- Drop zone overlay (shown during drag) -->
+          <div id="dropOverlay" class="drop-overlay" style="display:none">
+            <span>Drop folder here</span>
+          </div>
+          <div class="folder-actions-row">
+            <button id="resetDesktopBtn" class="btn-link">Reset to Desktop</button>
+            <!-- Profile selector -->
+            <select id="profileSelect" class="profile-select">
+              <option value="">No profile</option>
+            </select>
+          </div>
         </div>
 
-        <!-- Big Declutter Button -->
+        <!-- Action Buttons: Preview + Declutter -->
         <div class="action-section">
+          <button id="previewBtn" class="btn-chrome btn-preview" title="Preview what will happen">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+            Preview
+          </button>
           <button id="declutterBtn" class="btn-aero-primary">
             <span class="btn-aero-shine"></span>
             <span class="btn-aero-content">
@@ -85,9 +112,9 @@
           </button>
         </div>
 
-        <!-- Glass Panel: Auto Mode + Undo -->
+        <!-- Controls Panel: Auto Mode + Schedule + Undo + Empty Folders -->
         <div class="glass-panel controls-panel">
-          <div class="glass-panel-shine"></div>
+          <!-- Auto Mode -->
           <div class="auto-row">
             <div class="auto-info">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -106,34 +133,166 @@
               </span>
             </label>
           </div>
+
           <div class="controls-divider"></div>
-          <button id="undoBtn" class="btn-chrome btn-undo" disabled>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M3 10h13a5 5 0 010 10H7"/>
-              <path d="M3 10l5-5M3 10l5 5"/>
-            </svg>
-            Undo Last Action
-          </button>
+
+          <!-- Schedule -->
+          <div class="auto-row">
+            <div class="auto-info">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+              <div>
+                <span class="auto-label">Schedule</span>
+                <span class="auto-desc" id="scheduleDesc">Organize on a timer</span>
+              </div>
+            </div>
+            <div class="schedule-controls">
+              <select id="scheduleInterval" class="input-sm schedule-select">
+                <option value="hourly">Hourly</option>
+                <option value="6hours">Every 6h</option>
+                <option value="daily" selected>Daily</option>
+                <option value="weekly">Weekly</option>
+              </select>
+              <label class="aero-switch">
+                <input type="checkbox" id="scheduleToggle">
+                <span class="aero-switch-track">
+                  <span class="aero-switch-thumb"></span>
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <div class="controls-divider"></div>
+
+          <!-- Undo + Empty Folders row -->
+          <div class="controls-bottom-row">
+            <button id="undoBtn" class="btn-chrome btn-undo" disabled>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 10h13a5 5 0 010 10H7"/>
+                <path d="M3 10l5-5M3 10l5 5"/>
+              </svg>
+              Undo <span id="undoCount"></span>
+            </button>
+            <button id="cleanFoldersBtn" class="btn-chrome btn-clean" title="Remove empty folders">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/>
+                <line x1="9" y1="14" x2="15" y2="14"/>
+              </svg>
+              Clean
+            </button>
+          </div>
         </div>
 
-        <!-- Glass Panel: Activity Log -->
+        <!-- Activity Log -->
         <div class="glass-panel log-panel">
-          <div class="glass-panel-shine"></div>
           <label class="section-label">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
             Activity Log
           </label>
           <div id="logContainer" class="log-container">
-            <div class="log-empty">[^_^] Ready when you are! Click "Declutter Now" to start!</div>
+            <div class="log-empty">[^_^] Ready when you are!</div>
           </div>
         </div>
 
       </div>
 
+      <!-- ═══════════ STATS VIEW ═══════════ -->
+      <div id="statsView" class="view">
+        <div class="settings-header">
+          <button id="statsBackBtn" class="btn-chrome btn-icon" title="Back">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12"/>
+              <polyline points="12 19 5 12 12 5"/>
+            </svg>
+          </button>
+          <h2 class="settings-title">Stats</h2>
+        </div>
+
+        <div class="settings-scroll">
+          <!-- Stats cards -->
+          <div class="glass-panel stats-card">
+            <div class="stats-big-number" id="statsTotalFiles">0</div>
+            <div class="stats-label">Files Organized</div>
+          </div>
+
+          <div class="stats-row">
+            <div class="glass-panel stats-card stats-card-sm">
+              <div class="stats-number" id="statsSessions">0</div>
+              <div class="stats-label">Sessions</div>
+            </div>
+            <div class="glass-panel stats-card stats-card-sm">
+              <div class="stats-number" id="statsUndos">0</div>
+              <div class="stats-label">Undos</div>
+            </div>
+          </div>
+
+          <div class="glass-panel stats-card">
+            <label class="section-label">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="20" x2="18" y2="10"/>
+                <line x1="12" y1="20" x2="12" y2="4"/>
+                <line x1="6" y1="20" x2="6" y2="14"/>
+              </svg>
+              Top Categories
+            </label>
+            <div id="statsCategories" class="stats-categories"></div>
+          </div>
+
+          <div class="glass-panel stats-card">
+            <div class="stats-meta">
+              <span>First used: <strong id="statsFirstDate">—</strong></span>
+              <span>Last session: <strong id="statsLastDate">—</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════ PREVIEW VIEW ═══════════ -->
+      <div id="previewView" class="view">
+        <div class="settings-header">
+          <button id="previewBackBtn" class="btn-chrome btn-icon" title="Back">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12"/>
+              <polyline points="12 19 5 12 12 5"/>
+            </svg>
+          </button>
+          <h2 class="settings-title">Preview</h2>
+        </div>
+
+        <div class="preview-toolbar">
+          <label class="preview-check">
+            <input type="checkbox" id="previewSelectAll" checked>
+            Select all
+          </label>
+          <span class="preview-hint">Untick to skip once · pin to never move</span>
+        </div>
+
+        <div id="previewList" class="settings-scroll"></div>
+
+        <div class="settings-actions">
+          <span id="previewSkipped" class="preview-skipped"></span>
+          <div class="settings-actions-right">
+            <button id="previewCancelBtn" class="btn-chrome">Cancel</button>
+            <button id="previewApplyBtn" class="btn-aero-primary btn-aero-sm">
+              <span class="btn-aero-shine"></span>
+              <span class="btn-aero-content">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                </svg>
+                <span id="previewApplyLabel">Organize</span>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- ═══════════ SETTINGS VIEW ═══════════ -->
       <div id="settingsView" class="view">
 
-        <!-- Settings Header -->
         <div class="settings-header">
           <button id="settingsBackBtn" class="btn-chrome btn-icon" title="Back">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -146,9 +305,8 @@
 
         <div class="settings-scroll">
 
-          <!-- Section 1: Custom File Rules -->
+          <!-- Section: Custom File Rules -->
           <div class="glass-panel settings-section">
-            <div class="glass-panel-shine"></div>
             <label class="section-label">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
@@ -158,7 +316,7 @@
               </svg>
               Custom File Rules
             </label>
-            <p class="settings-desc">Route specific file types to custom folders</p>
+            <p class="settings-desc">Route files by extension (<code>.psd</code>) or by name (<code>Screenshot*</code>, <code>*invoice*</code>). <code>*</code> matches anything, <code>?</code> one character. Name rules win over everything else.</p>
             <div id="customRulesList" class="settings-list"></div>
             <button id="addRuleBtn" class="btn-chrome btn-add">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
@@ -169,9 +327,8 @@
             </button>
           </div>
 
-          <!-- Section 2: File Exclusions -->
+          <!-- Section: File Exclusions -->
           <div class="glass-panel settings-section">
-            <div class="glass-panel-shine"></div>
             <label class="section-label">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
@@ -188,9 +345,21 @@
             </div>
           </div>
 
-          <!-- Section 3: Custom Folder Names -->
+          <!-- Section: Pinned Files -->
           <div class="glass-panel settings-section">
-            <div class="glass-panel-shine"></div>
+            <label class="section-label">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="17" x2="12" y2="22"/>
+                <path d="M5 17h14v-1.76a2 2 0 00-1.11-1.79l-1.78-.9A2 2 0 0115 10.76V6h1a2 2 0 000-4H8a2 2 0 000 4h1v4.76a2 2 0 01-1.11 1.79l-1.78.9A2 2 0 005 15.24z"/>
+              </svg>
+              Pinned Files
+            </label>
+            <p class="settings-desc">Files that stay put, no matter what. Pin them from the Preview.</p>
+            <div id="pinnedFilesList" class="settings-list"></div>
+          </div>
+
+          <!-- Section: Folder Names -->
+          <div class="glass-panel settings-section">
             <label class="section-label">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/>
@@ -202,9 +371,8 @@
             <div id="folderNamesList" class="settings-list"></div>
           </div>
 
-          <!-- Section 4: Shortcut Organization -->
+          <!-- Section: Shortcut Organization -->
           <div class="glass-panel settings-section">
-            <div class="glass-panel-shine"></div>
             <label class="section-label">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/>
@@ -241,9 +409,62 @@
             </div>
           </div>
 
+          <!-- Section: Cleanup & Hotkey -->
+          <div class="glass-panel settings-section">
+            <label class="section-label">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="4 17 10 11 4 5"/>
+                <line x1="12" y1="19" x2="20" y2="19"/>
+              </svg>
+              Advanced
+            </label>
+
+            <div class="auto-row">
+              <div class="auto-info">
+                <div>
+                  <span class="auto-label">Clean Empty Folders</span>
+                  <span class="auto-desc">Auto-remove empty folders after organizing</span>
+                </div>
+              </div>
+              <label class="aero-switch">
+                <input type="checkbox" id="cleanFoldersToggle">
+                <span class="aero-switch-track">
+                  <span class="aero-switch-thumb"></span>
+                </span>
+              </label>
+            </div>
+
+            <div class="shortcut-options" style="display:flex">
+              <div class="folder-name-row">
+                <label>Global Hotkey:</label>
+                <input type="text" id="hotkeyInput" class="input-sm" value="CommandOrControl+Shift+D" style="width:180px" placeholder="Ctrl+Shift+D">
+              </div>
+            </div>
+          </div>
+
+          <!-- Section: Profiles -->
+          <div class="glass-panel settings-section">
+            <label class="section-label">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/>
+                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+              </svg>
+              Profiles
+            </label>
+            <p class="settings-desc">Save folder + rules presets for quick switching</p>
+            <div id="profilesList" class="settings-list"></div>
+            <button id="saveProfileBtn" class="btn-chrome btn-add">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              Save Current as Profile
+            </button>
+          </div>
+
         </div>
 
-        <!-- Sticky bottom action bar -->
+        <!-- Settings action bar -->
         <div class="settings-actions">
           <button id="resetSettingsBtn" class="btn-chrome btn-danger-subtle">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
