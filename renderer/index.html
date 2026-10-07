@@ -41,9 +41,13 @@
     <!-- Main content area -->
     <div class="app-container">
 
-      <!-- Toast message — floats above all views -->
-      <div id="companionMessage" class="companion-message" style="display:none">
-        <span id="companionMessageText"></span>
+      <!-- Toast message — sits in the layout and slides the content down -->
+      <div id="companionMessage" class="companion-message" aria-live="polite">
+        <div class="companion-message-clip">
+          <div class="companion-message-bubble">
+            <span id="companionMessageText"></span>
+          </div>
+        </div>
       </div>
 
       <!-- ═══════════ MAIN VIEW ═══════════ -->

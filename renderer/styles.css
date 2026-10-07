@@ -330,13 +330,35 @@ body {
   animation: companionPop 0.35s ease;
 }
 
-/* Companion message bubble */
+/* Companion message — lives in the layout above the views. Its row
+   animates from 0 to auto height (grid 0fr -> 1fr) so the content below
+   glides down instead of being covered. */
 .companion-message {
-  position: absolute;
-  top: 12px;
-  left: 20px;
-  right: 20px;
-  z-index: 100;
+  display: grid;
+  grid-template-rows: 0fr;
+  flex-shrink: 0;
+  margin-right: 10px; /* line up with the views (they reserve room for a scrollbar) */
+  opacity: 0;
+  /* Gentle ease-in-out: eases in and settles softly instead of snapping */
+  --toast-slide: 0.65s cubic-bezier(0.45, 0, 0.2, 1);
+  transition:
+    grid-template-rows var(--toast-slide),
+    margin-bottom var(--toast-slide),
+    opacity 0.5s ease;
+}
+
+.companion-message.show {
+  grid-template-rows: 1fr;
+  margin-bottom: 12px;
+  opacity: 1;
+}
+
+.companion-message-clip {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.companion-message-bubble {
   text-align: center;
   padding: 8px 16px;
   background: var(--paper-warm);
@@ -346,12 +368,12 @@ body {
   font-size: 12px;
   color: var(--text-secondary);
   font-style: italic;
-  box-shadow: var(--shadow-sm);
-  pointer-events: none;
+  transform: translateY(-8px);
+  transition: transform var(--toast-slide);
 }
 
-.companion-message.fade-in {
-  animation: fadeInDown 0.3s ease;
+.companion-message.show .companion-message-bubble {
+  transform: translateY(0);
 }
 
 /* Mini face in the title bar */

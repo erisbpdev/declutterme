@@ -154,17 +154,17 @@ function showCompanionMessage(key) {
   if (!mainView.classList.contains('active')) return;
   const msg = randomMessage(key);
   if (companionMessageText) companionMessageText.textContent = msg;
-  if (companionMessage) {
-    companionMessage.style.display = 'block';
-    companionMessage.classList.remove('fade-in');
-    void companionMessage.offsetWidth;
-    companionMessage.classList.add('fade-in');
-  }
+  // Already open? Just swap the text — re-sliding would make the layout bounce
+  if (companionMessage) companionMessage.classList.add('show');
 
   if (companionMsgTimer) clearTimeout(companionMsgTimer);
-  companionMsgTimer = setTimeout(() => {
-    if (companionMessage) companionMessage.style.display = 'none';
-  }, 4000);
+  companionMsgTimer = setTimeout(hideCompanionMessage, 4000);
+}
+
+function hideCompanionMessage() {
+  if (companionMsgTimer) clearTimeout(companionMsgTimer);
+  companionMsgTimer = null;
+  if (companionMessage) companionMessage.classList.remove('show');
 }
 
 // ═══════════════════════════════════════════
@@ -222,9 +222,8 @@ function hideAllViews() {
   settingsView.classList.remove('active');
   statsView.classList.remove('active');
   previewView.classList.remove('active');
-  // The speech bubble sits over the top of the window — it belongs to the main view only
-  if (companionMsgTimer) clearTimeout(companionMsgTimer);
-  if (companionMessage) companionMessage.style.display = 'none';
+  // The speech bubble belongs to the main view only
+  hideCompanionMessage();
 }
 
 function showSettings() {
