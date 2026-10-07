@@ -1,7 +1,8 @@
 // ═══════════════════════════════════════════
 // DOM Elements — Main View
 // ═══════════════════════════════════════════
-const folderPathInput = document.getElementById('folderPath');
+const folderPathEl = document.getElementById('folderPath');
+const folderNameEl = document.getElementById('folderName');
 const browseFolderBtn = document.getElementById('browseFolderBtn');
 const resetDesktopBtn = document.getElementById('resetDesktopBtn');
 const declutterBtn = document.getElementById('declutterBtn');
@@ -15,9 +16,9 @@ const closeBtn = document.getElementById('closeBtn');
 const settingsBtn = document.getElementById('settingsBtn');
 const statsBtn = document.getElementById('statsBtn');
 const companionFace = document.getElementById('companionFace');
-const companionFaceMini = document.getElementById('companionFaceMini');
-const companionMessage = document.getElementById('companionMessage');
 const companionMessageText = document.getElementById('companionMessageText');
+const tidyStatus = document.getElementById('tidyStatus');
+const tidyStatusDot = document.getElementById('tidyStatusDot');
 const folderPanel = document.getElementById('folderPanel');
 const dropOverlay = document.getElementById('dropOverlay');
 const profileSelect = document.getElementById('profileSelect');
@@ -132,7 +133,6 @@ function randomMessage(key) {
 function setCompanionFace(key, temporary = false) {
   const face = FACES[key] || FACES.idle;
   if (companionFace) companionFace.textContent = face;
-  if (companionFaceMini) companionFaceMini.textContent = face;
 
   // Pop animation
   if (companionFace) {
@@ -150,21 +150,62 @@ function setCompanionFace(key, temporary = false) {
   }
 }
 
-function showCompanionMessage(key) {
-  if (!mainView.classList.contains('active')) return;
-  const msg = randomMessage(key);
-  if (companionMessageText) companionMessageText.textContent = msg;
-  // Already open? Just swap the text — re-sliding would make the layout bounce
-  if (companionMessage) companionMessage.classList.add('show');
+// Messages live on Tidy's screen: the text fades over to the new line,
+// then settles back to a resting line after a few seconds
+let messageSwapTimer = null;
 
-  if (companionMsgTimer) clearTimeout(companionMsgTimer);
-  companionMsgTimer = setTimeout(hideCompanionMessage, 4000);
+function setScreenMessage(text) {
+  if (!companionMessageText || companionMessageText.textContent === text) return;
+  if (messageSwapTimer) clearTimeout(messageSwapTimer);
+  companionMessageText.classList.add('is-changing');
+  messageSwapTimer = setTimeout(() => {
+    companionMessageText.textContent = text;
+    companionMessageText.classList.remove('is-changing');
+  }, 180);
 }
 
-function hideCompanionMessage() {
+function showCompanionMessage(key) {
+  setScreenMessage(randomMessage(key));
+  if (companionMsgTimer) clearTimeout(companionMsgTimer);
+  companionMsgTimer = setTimeout(restCompanionMessage, 5000);
+}
+
+function restCompanionMessage() {
   if (companionMsgTimer) clearTimeout(companionMsgTimer);
   companionMsgTimer = null;
-  if (companionMessage) companionMessage.classList.remove('show');
+  setScreenMessage(isAutoMode ? 'Watching for new files~' : 'Ready when you are!');
+}
+
+// Status line under the message: what Tidy is doing in the background
+function updateTidyStatus() {
+  if (!tidyStatus) return;
+  const name = folderDisplayName(currentFolder);
+  let text = 'Idle';
+  let state = 'idle';
+  if (isAutoMode) {
+    text = `Watching ${name}`;
+    state = 'on';
+  } else if (isScheduleActive) {
+    const label = scheduleInterval.options[scheduleInterval.selectedIndex]?.text || 'Scheduled';
+    text = `${label} schedule · ${name}`;
+    state = 'scheduled';
+  }
+  tidyStatus.textContent = text;
+  tidyStatusDot.dataset.state = state;
+}
+
+function folderDisplayName(folderPath) {
+  if (!folderPath) return 'No folder';
+  const parts = folderPath.split(/[\\/]/).filter(Boolean);
+  return parts[parts.length - 1] || folderPath;
+}
+
+// Folder card: folder name big, full path small underneath
+function setFolderDisplay(folderPath) {
+  folderNameEl.textContent = folderDisplayName(folderPath);
+  folderPathEl.textContent = folderPath || 'Select or drop a folder';
+  folderPathEl.title = folderPath || '';
+  updateTidyStatus();
 }
 
 // ═══════════════════════════════════════════
@@ -172,7 +213,7 @@ function hideCompanionMessage() {
 // ═══════════════════════════════════════════
 async function init() {
   currentFolder = await window.api.getDesktopPath();
-  folderPathInput.value = currentFolder;
+  setFolderDisplay(currentFolder);
 
   const autoStatus = await window.api.getAutoStatus();
   autoToggle.checked = autoStatus;
@@ -187,6 +228,7 @@ async function init() {
   if (isScheduleActive) {
     scheduleDesc.textContent = `Next: ${scheduleInterval.value}`;
   }
+  updateTidyStatus();
 
   await updateUndoButton();
   await loadProfiles();
@@ -222,8 +264,6 @@ function hideAllViews() {
   settingsView.classList.remove('active');
   statsView.classList.remove('active');
   previewView.classList.remove('active');
-  // The speech bubble belongs to the main view only
-  hideCompanionMessage();
 }
 
 function showSettings() {
@@ -259,13 +299,13 @@ browseFolderBtn.addEventListener('click', async () => {
   const folder = await window.api.selectFolder();
   if (folder) {
     currentFolder = folder;
-    folderPathInput.value = folder;
+    setFolderDisplay(folder);
   }
 });
 
 resetDesktopBtn.addEventListener('click', async () => {
   currentFolder = await window.api.getDesktopPath();
-  folderPathInput.value = currentFolder;
+  setFolderDisplay(currentFolder);
 });
 
 // ═══════════════════════════════════════════
@@ -306,7 +346,7 @@ folderPanel.addEventListener('drop', async (e) => {
     const isDir = await window.api.validateFolder(droppedPath);
     if (isDir) {
       currentFolder = droppedPath;
-      folderPathInput.value = droppedPath;
+      setFolderDisplay(droppedPath);
       showCompanionMessage('idle');
     } else {
       addLogEntry('Dropped item is not a folder', 'error');
@@ -371,7 +411,7 @@ function renderPreview() {
 
   const renderGroup = (title, groupItems, isPinnedGroup) => {
     const section = document.createElement('div');
-    section.className = 'glass-panel settings-section preview-group';
+    section.className = 'card preview-group';
 
     const allSelected = groupItems.every(i => i.selected);
     section.innerHTML = `
@@ -466,6 +506,8 @@ previewApplyBtn.addEventListener('click', async () => {
 // ═══════════════════════════════════════════
 // Declutter
 // ═══════════════════════════════════════════
+const DECLUTTER_LABEL = declutterBtn.innerHTML;
+
 declutterBtn.addEventListener('click', () => runDeclutter(currentFolder));
 
 async function runDeclutter(folder, options) {
@@ -473,7 +515,7 @@ async function runDeclutter(folder, options) {
 
   declutterBtn.disabled = true;
   declutterBtn.classList.add('loading');
-  declutterBtn.innerHTML = '<span class="btn-aero-shine"></span><span class="btn-aero-content"><svg class="btn-aero-icon spin" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 11-6.219-8.56"/></svg> Organizing...</span>';
+  declutterBtn.innerHTML = '<svg class="btn-glyph spin" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 11-6.219-8.56"/></svg> Organizing…';
   setCompanionFace('working');
   showCompanionMessage('working');
 
@@ -505,7 +547,7 @@ async function runDeclutter(folder, options) {
   } finally {
     declutterBtn.disabled = false;
     declutterBtn.classList.remove('loading');
-    declutterBtn.innerHTML = '<span class="btn-aero-shine"></span><span class="btn-aero-content"><svg class="btn-aero-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Declutter Now</span>';
+    declutterBtn.innerHTML = DECLUTTER_LABEL;
   }
 }
 
@@ -519,6 +561,7 @@ autoToggle.addEventListener('change', async () => {
   }
   const watching = await window.api.toggleAutoMode(currentFolder);
   isAutoMode = watching;
+  updateTidyStatus();
   setCompanionFace(isAutoMode ? 'auto' : 'idle');
   if (isAutoMode) showCompanionMessage('auto');
 });
@@ -533,6 +576,7 @@ scheduleToggle.addEventListener('change', async () => {
   }
   const active = await window.api.toggleSchedule(currentFolder, scheduleInterval.value);
   isScheduleActive = active;
+  updateTidyStatus();
   scheduleDesc.textContent = active
     ? `Next: ${scheduleInterval.value}`
     : 'Organize on a timer';
@@ -545,6 +589,7 @@ scheduleInterval.addEventListener('change', async () => {
   // Restarts the timer if active, otherwise just remembers the choice
   if (!currentFolder) return;
   isScheduleActive = await window.api.setScheduleInterval(currentFolder, scheduleInterval.value);
+  updateTidyStatus();
   if (isScheduleActive) {
     scheduleDesc.textContent = `Next: ${scheduleInterval.value}`;
   }
@@ -659,9 +704,9 @@ function addLogEntry(html, type = '') {
   entry.className = `log-entry ${type}`;
 
   const now = new Date();
-  const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-  entry.innerHTML = `<span class="timestamp">${time}</span> ${html}`;
+  entry.innerHTML = `<span class="log-text">${html}</span><span class="timestamp">${time}</span>`;
 
   logContainer.insertBefore(entry, logContainer.firstChild);
 
@@ -742,7 +787,7 @@ profileSelect.addEventListener('change', async () => {
   // Apply profile
   if (profile.folderPath) {
     currentFolder = profile.folderPath;
-    folderPathInput.value = profile.folderPath;
+    setFolderDisplay(profile.folderPath);
   }
 
   // Save profile rules as current config
@@ -1114,6 +1159,7 @@ resetSettingsBtn.addEventListener('click', async () => {
   hotkeyInput.value = 'CommandOrControl+Shift+D';
   // Reset also stops the schedule
   isScheduleActive = false;
+  updateTidyStatus();
   scheduleToggle.checked = false;
   scheduleInterval.value = 'daily';
   scheduleDesc.textContent = 'Organize on a timer';

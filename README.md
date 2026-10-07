@@ -68,7 +68,7 @@ Tidy is a retro ASCII robot face that reacts to what's happening in the app:
 [^-^]  Tidy — folder already clean
 ```
 
-Tidy lives in the logo orb and the title bar. Expressions animate with a pop effect and temporary states revert after 3 seconds.
+Tidy lives on its own little glowing screen at the top of the app. Messages appear right on the screen and settle back to a resting line after a few seconds, and the status line underneath shows what Tidy is up to (idle, watching a folder, or on a schedule).
 
 ---
 
@@ -239,7 +239,8 @@ app/
   renderer/
     index.html          App UI layout (frameless window)
     app.js              Frontend logic, state, companion system
-    styles.css          Japanese stationery / sakura paper design
+    styles.css          Calm design — warm neutrals, sakura accent, Tidy's screen
+    fonts/              Bundled Instrument Sans + VT323 (OFL)
 
   test/
     organizer.test.js   Organizer test suite (node:test)
@@ -270,7 +271,7 @@ website/
 | Packaging | electron-builder |
 | Landing page | Next.js 14, React 18 |
 | Glass effects | Custom SVG displacement filters |
-| Design | Retro Japanese stationery — warm paper & sakura ink |
+| Design | Calm warm neutrals, one sakura accent, pixel-font companion screen |
 | Tests | Node.js built-in test runner |
 | CI/CD | GitHub Actions |
 

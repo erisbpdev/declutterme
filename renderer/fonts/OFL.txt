@@ -1,5 +1,5 @@
-Sono — Copyright 2022 The Sono Project Authors (https://github.com/sursly/sono)
-Fraunces — Copyright 2018 The Fraunces Project Authors (https://github.com/undercasetype/Fraunces)
+Instrument Sans — Copyright 2022 The Instrument Sans Project Authors (https://github.com/Instrument/instrument-sans)
+VT323 — Copyright 2011, The VT323 Project Authors (peter.hull@oikoi.com)
 
 This Font Software is licensed under the SIL Open Font License, Version 1.1.
 This license is copied below, and is also available with a FAQ at:
